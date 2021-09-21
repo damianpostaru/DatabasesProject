@@ -1,4 +1,6 @@
 import pymysql
+
+import db_config
 from app import app
 from db_config import mysql
 from flask import jsonify
@@ -12,43 +14,31 @@ def get_pizza():
 
 @app.route("/create", methods=["POST"])
 def create_pizza():
-    return "Good"
-
-
-@app.route("/add", methods=['POST'])
-def add_user():
     try:
-        _json = request.json
-        _name = _json['name']
-        _email = _json['email']
-        _password = _json['pwd']
-        print(_name)
-        # validate the received values
-        if _name and _email and _password and request.method == 'POST':
-            # do not save password as a plain text
-            # save edits
-            sql = "INSERT INTO tbl_user(user_name, user_email, user_password) VALUES(%s, %s, %s)"
-            data = (_name, _email, _password)
-            conn = mysql.connect()
-            cursor = conn.cursor()
+        json = request.json
+        name = json['name']
+        vegetarian = json['vegetarian']
+        price = json['price']
+        if name is not None and vegetarian is not None and price is not None and request.method == 'POST':
+            sql = "INSERT INTO pizzas(name, vegetarian, price) VALUES(%s, %s, %s)"
+            data = (name, vegetarian, price)
+            connexion = mysql.connect()
+            cursor = connexion.cursor()
             cursor.execute(sql, data)
-            conn.commit()
-            resp = jsonify('User added successfully!')
-            resp.status_code = 200
-            return resp
+            connexion.commit()
+            response = jsonify('Pizza added successfully!')
+            response.status_code = 200
+            return response
         else:
             return not_found()
     except Exception as e:
         print(e)
-    finally:
-        cursor.close()
-        conn.close()
 
 
 @app.errorhandler(404)
-def not_found(error=None):
+def not_found():
     message = {
-        'status': 405,
+        'status': 404,
         'message': 'Not Found: ' + request.url,
     }
     resp = jsonify(message)
