@@ -3,7 +3,7 @@ from app import app
 
 # TODO: find how to set schema for mysql
 # app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://pizzeria-owner:n&jPrqRZL3r3sV7K@localhost:5432/pizzeria-db"
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://pizzeria-owner:n&jPrqRZL3r3sV7K@localhost/pizzeria"
+app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://pizzeria-owner:n&jPrqRZL3r3sV7K@localhost:3307/pizzeria"
 db = SQLAlchemy(app)
 
 
