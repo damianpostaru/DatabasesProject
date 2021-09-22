@@ -1,10 +1,8 @@
-import pymysql
+from flask import jsonify, make_response
+from flask import request
 
-import db_config
 from app import app
-from db_config import mysql
-from flask import jsonify
-from flask import flash, request
+from modules.mysql_model import save_new_pizza
 
 
 @app.route("/pizza")
@@ -14,25 +12,16 @@ def get_pizza():
 
 @app.route("/create", methods=["POST"])
 def create_pizza():
+    data = request.json
+    name = data["name"]
+    vegetarian = data["vegetarian"]
+    price = data["price"]
+
     try:
-        json = request.json
-        name = json['name']
-        vegetarian = json['vegetarian']
-        price = json['price']
-        if name is not None and vegetarian is not None and price is not None and request.method == 'POST':
-            sql = "INSERT INTO pizzas(name, vegetarian, price) VALUES(%s, %s, %s)"
-            data = (name, vegetarian, price)
-            connexion = mysql.connect()
-            cursor = connexion.cursor()
-            cursor.execute(sql, data)
-            connexion.commit()
-            response = jsonify('Pizza added successfully!')
-            response.status_code = 200
-            return response
-        else:
-            return not_found()
+        save_new_pizza(name, vegetarian, price)
     except Exception as e:
-        print(e)
+        return make_response({"error": f"could not add pizza {str(e)}"}, 400)
+    return make_response({"result": "success"}, 200)
 
 
 @app.errorhandler(404)
