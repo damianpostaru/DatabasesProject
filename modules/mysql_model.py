@@ -31,12 +31,15 @@ def save_new_pizza(name, vegetarian, price):
     return new_pizza
 
 
-def find_single_pizza(**kwargs):
-    if "id" in kwargs:
-        kwargs["_id"] = ObjectId(kwargs["id"])
-        kwargs.pop("id")
+def find_single_pizza(name):
+    pizza = Pizza.query.filter_by(name=name).first_or_404(description='There is no pizza with name {}'.format(name))
+    return pizza
 
-    print(kwargs)
-    result = db.pizzeria.find_one(kwargs)
+
+def delete_pizza(name):
+    pizza = find_single_pizza(name)
+    db.session.delete(pizza)
+    db.session.commit()
+
 
 db.create_all()

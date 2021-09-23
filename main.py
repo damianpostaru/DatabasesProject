@@ -2,7 +2,7 @@ from flask import jsonify, make_response, render_template
 from flask import request
 
 from app import app
-from modules.mysql_model import save_new_pizza, Pizza
+from modules.mysql_model import save_new_pizza, Pizza, find_single_pizza, delete_pizza
 
 
 @app.route("/test")
@@ -12,7 +12,7 @@ def get_test():
 
 @app.route("/pizza/<name>")
 def get_pizza(name):
-    pizza = Pizza.query.filter_by(name=name).first_or_404()
+    pizza = find_single_pizza(name)
     return render_template('show_pizza.html', name=name, vegetarian=pizza.vegetarian, price=pizza.price)
 
 
@@ -29,6 +29,16 @@ def create_pizza():
         return make_response({"error": f"could not add pizza {str(e)}"}, 400)
     return make_response({"result": "success"}, 200)
 
+
+@app.route("/delete/<name>", methods=["POST"])
+def remove_pizza():
+    data = request.json
+    name = data["name"]
+    try:
+        delete_pizza(name)
+    except Exception as e:
+        return make_response({"error": f"could not delete pizza {str(e)}"}, 400)
+    return make_response({"result": "success"}, 200)
 
 
 
