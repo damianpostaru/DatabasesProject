@@ -1,13 +1,19 @@
-from flask import jsonify, make_response
+from flask import jsonify, make_response, render_template
 from flask import request
 
 from app import app
-from modules.mysql_model import save_new_pizza
+from modules.mysql_model import save_new_pizza, Pizza
 
 
-@app.route("/pizza")
-def get_pizza():
+@app.route("/test")
+def get_test():
     return "Hello World"
+
+
+@app.route("/pizza/<name>")
+def get_pizza(name):
+    pizza = Pizza.query.filter_by(name=name).first_or_404()
+    return render_template('show_pizza.html', name=name, vegetarian=pizza.vegetarian, price=pizza.price)
 
 
 @app.route("/create", methods=["POST"])
@@ -22,6 +28,8 @@ def create_pizza():
     except Exception as e:
         return make_response({"error": f"could not add pizza {str(e)}"}, 400)
     return make_response({"result": "success"}, 200)
+
+
 
 
 @app.errorhandler(404)

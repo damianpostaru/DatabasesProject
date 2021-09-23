@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+from bson.objectid import ObjectId
 from app import app
 
 # TODO: find how to set schema for mysql
@@ -15,6 +16,10 @@ class Pizza(db.Model):
 
     __table_args__ = {'schema': 'pizzeria'}
 
+    @staticmethod
+    def deserialize(pizza_d: dict):
+        return Pizza(**pizza_d)
+
     def __repr__(self):
         return f"Pizza {self.name}, vegetarian:{self.vegetarian}, with price {self.price}"
 
@@ -25,5 +30,13 @@ def save_new_pizza(name, vegetarian, price):
     db.session.commit()
     return new_pizza
 
+
+def find_single_pizza(**kwargs):
+    if "id" in kwargs:
+        kwargs["_id"] = ObjectId(kwargs["id"])
+        kwargs.pop("id")
+
+    print(kwargs)
+    result = db.pizzeria.find_one(kwargs)
 
 db.create_all()
