@@ -41,7 +41,6 @@ def remove_pizza():
     return make_response({"result": "success"}, 200)
 
 
-
 @app.errorhandler(404)
 def not_found():
     message = {
