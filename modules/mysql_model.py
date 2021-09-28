@@ -1,5 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
-from bson.objectid import ObjectId
+
 from app import app
 
 # TODO: find how to set schema for mysql
@@ -40,6 +40,10 @@ def delete_pizza(name):
     pizza = find_single_pizza(name)
     db.session.delete(pizza)
     db.session.commit()
+
+
+def get_all_pizzas():
+    return Pizza.query.all()
 
 
 db.create_all()

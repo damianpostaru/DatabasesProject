@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .topnav {
+            overflow: hidden;
+            background-color: #333;
+        }
+
+        .topnav a {
+            float: left;
+            display: block;
+            color: #ff5858;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+            font-size: 17px;
+        }
+
+        .topnav a:hover {
+            background-color: #ffb94a;
+            color: black;
+        }
+
+        .topnav a.active {
+            background-color: #ffe94e;
+            color: white;
+        }
+        .topnav .login-container {
+            float: right;
+        }
+
+        .topnav input[type=text] {
+            padding: 6px;
+            margin-top: 8px;
+            font-size: 17px;
+            border: none;
+            width:120px;
+        }
+        .topnav input[type=password] {
+            padding: 6px;
+            margin-top: 8px;
+            font-size: 17px;
+            border: none;
+            width:120px;
+        }
+        .topnav .login-container button {
+            float: right;
+            padding: 6px 10px;
+            margin-top: 8px;
+            margin-right: 16px;
+            background-color: #555;
+            color: white;
+            font-size: 17px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .topnav .login-container button:hover {
+            background-color: #ffa318;
+        }
+        @media screen and (max-width: 600px) {
+            .topnav .login-container {
+                float: none;
+            }
+            .topnav a, .topnav input[type=text], .topnav .login-container button {
+                float: none;
+                display: block;
+                text-align: left;
+                width: 100%;
+                margin: 0;
+                padding: 14px;
+            }
+            .topnav input[type=text] {
+                border: 1px solid #ccc;
+            }
+            .topnav input[type=password] {
+                border: 1px solid #ccc;
+            }
+        }
+        .Food {
+            color: #ffbb3f;
+        }
+    </style>
+</head>
+<body>
+<div class="topnav">
+    <a class="active" href="#Home">Home</a>
+    <a href="#Food">Food</a>
+    <a href="drinks.html">Drinks</a>
+    <a href="desserts.html">Desserts</a>
+    <div class="login-container">
+        <form action="/login.html">
+            Username: <label for="myUser"></label><input type="text" placeholder="Username" name="username" id="myUser">
+            Password: <label for="myPass"></label><input type="password" placeholder="Password" name="password" id="myPass">
+            <!-- An element to toggle between password visibility -->
+            <label>
+                <input type="checkbox" onclick="myFunction()">
+            </label>Show Password
+            <button type="submit">Login</button>
+        </form>
+    </div>
+    <div class="contact" style="padding-left: 16px">
+        <a href="https://google.com" target="_blank">Google</a>
+        <a href="mailto:lorenzopompigna1@gmail.com">Email me</a>
+    </div>
+    <div class="Home" id="Home" style="padding-left:16px">
+        <h2>Pizzeria name</h2>
+        <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer volutpat dui ac purus rhoncus mollis. Maecenas quis dui aliquet, volutpat metus ullamcorper, faucibus risus. Cras fringilla lacus sit amet dolor egestas, quis lacinia turpis rhoncus. In vehicula sem sit amet lacus ornare, nec condimentum purus dignissim. Maecenas in accumsan urna, vel tristique ex. Fusce ultricies, velit non tincidunt tristique, nisl mauris iaculis mi, quis tempus ligula lorem non nulla. Aliquam vestibulum libero vitae sem gravida, nec dignissim nisl suscipit. Suspendisse viverra nunc id tincidunt mattis. Curabitur ipsum nunc, accumsan ac bibendum eget, rutrum sed tortor. Vivamus scelerisque at turpis a faucibus. Curabitur id sapien non risus lacinia fringilla. Curabitur elit elit, mattis a leo ac, congue pulvinar lectus. In a quam pretium purus molestie interdum non vel velit. Vestibulum ut malesuada est. Morbi sodales vehicula lectus. Nullam nec vestibulum arcu.
+
+            Aliquam erat volutpat. Pellentesque eget dui quis massa pretium pretium quis id lorem. Vivamus ex nulla, sollicitudin eget egestas non, pharetra vitae leo. Etiam sit amet tristique ligula. Nunc faucibus lacinia elementum. Duis quam felis, convallis ac lacus sed, interdum efficitur odio. Morbi dictum congue massa. Curabitur gravida feugiat risus, sed fermentum ipsum pharetra id. Curabitur laoreet massa in cursus mattis. Duis eget neque vitae orci euismod scelerisque id eu elit.
+
+            Vivamus suscipit urna augue, vitae suscipit est pretium et. Nullam rhoncus ornare quam sit amet molestie. Nullam at pulvinar odio, id laoreet eros. Ut et sem enim. Cras sit amet accumsan ante, eget consequat ex. Sed non nunc dolor. Aliquam efficitur bibendum luctus. Phasellus interdum magna sit amet nulla cursus porta. Proin eros nisi, iaculis nec ipsum vel, aliquet sagittis diam. Nam egestas neque nec lorem suscipit, in dapibus leo auctor. Fusce facilisis, est vitae euismod blandit, ipsum ex eleifend enim, nec tempus nunc augue eget augue. Integer sit amet turpis in nisl semper sagittis. Aliquam ut sapien pharetra, eleifend enim id, semper mauris.
+
+            Suspendisse hendrerit velit eu ultricies lacinia. Morbi et tincidunt elit. Quisque tincidunt ex nec leo sollicitudin, sed euismod dui vestibulum. In euismod ac nulla eu congue. Nulla et porttitor nibh. Etiam lacinia dui mi, vel venenatis libero laoreet ut. Vestibulum vestibulum massa et est placerat fermentum. Proin pharetra ex vel velit faucibus, eu fringilla erat finibus. Cras lobortis diam sed placerat iaculis. Fusce rutrum lectus ut turpis viverra, non pellentesque libero porttitor. Nam semper, metus in gravida pulvinar, urna lectus ullamcorper arcu, et feugiat nulla justo eu velit. Vestibulum sagittis neque ac est malesuada elementum. Mauris semper egestas felis ut blandit. Vivamus imperdiet placerat lacus nec dictum. Vestibulum sit amet metus urna. Aliquam vel metus magna.
+
+            Vivamus porttitor sem non dolor tempor imperdiet. Morbi viverra tristique finibus. Aenean quis ultrices enim, ut malesuada neque. Nam bibendum magna eget dictum dapibus. Aenean at dui sit amet ex consequat placerat eu quis neque. Vestibulum ac eleifend massa, vel varius ipsum. Suspendisse eu tempus mauris. Duis ultricies elementum eros sed molestie. Vestibulum porta dolor ut sapien fringilla porttitor. In dignissim elementum hendrerit. Aenean massa metus, rhoncus non condimentum sed, consectetur id mauris. Curabitur at luctus ex.
+
+            Pellentesque vulputate magna eget porta lobortis. Duis a odio ullamcorper, commodo massa sed, tincidunt ipsum. Maecenas vitae vulputate lectus. Proin iaculis metus quis rhoncus hendrerit. Nam bibendum sem quis congue facilisis. Proin porta suscipit nunc nec condimentum. Pellentesque auctor rutrum ligula nec eleifend. Nullam odio nibh, aliquet et turpis a, commodo gravida arcu. Proin quis rhoncus ipsum, ac fringilla diam. Aenean turpis purus, volutpat a accumsan eu, viverra et arcu. Fusce molestie neque interdum odio molestie aliquam.
+
+            Suspendisse volutpat, neque in eleifend fermentum, leo urna tempor eros, in iaculis sapien odio finibus enim. Nunc sollicitudin, metus eu ultrices tempor, tellus enim dapibus turpis, ac consequat neque erat vel nunc. Curabitur pretium sed nunc sed sollicitudin. Mauris in dictum lectus, scelerisque dictum tellus. Interdum et malesuada fames ac ante ipsum primis in faucibus. In malesuada quis nisi quis aliquam. Proin sollicitudin condimentum nisl, eget luctus mauris. Vestibulum ut fermentum nunc. Quisque fringilla vehicula erat, sit amet scelerisque purus viverra vitae. Mauris at nisl ultrices, vestibulum nibh et, aliquet ante. Vestibulum et velit lectus. Etiam rhoncus malesuada justo ac dapibus. Ut dapibus libero in leo lobortis, in fringilla ex luctus.
+
+            Duis placerat lectus sit amet nisl fringilla laoreet. Nam odio ligula, lacinia at posuere vitae, sollicitudin sed erat. Sed sed cursus eros, eu maximus arcu. Aliquam fermentum nunc vel nunc gravida tincidunt. Cras bibendum nulla sed pharetra lacinia. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sed dapibus massa, ut congue justo. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Sed vel aliquam ipsum.
+
+            Nullam faucibus vulputate tempor. Sed sed euismod tortor, sed tristique lectus. Phasellus eget augue id tortor imperdiet consequat id a mauris. Proin facilisis nibh est, id pellentesque urna mollis in. Phasellus scelerisque euismod orci in pulvinar. Suspendisse ut arcu maximus, efficitur erat sit amet, dignissim mauris. Aliquam ac ultricies nisl. Etiam sodales, dolor sit amet mattis porta, lacus ligula lobortis turpis, et accumsan magna arcu id mi. Nulla in convallis mi. Donec sit amet condimentum risus, a gravida odio. Fusce facilisis pulvinar viverra. Donec sagittis lectus ac felis elementum convallis.
+
+            Sed nec suscipit mi. Nullam id libero sit amet orci facilisis laoreet. Vestibulum arcu augue, maximus a turpis volutpat, rhoncus rutrum nulla. Vivamus efficitur bibendum congue. Phasellus nisl nisl, pulvinar semper nunc ut, lobortis porttitor enim. Nam eu pellentesque diam. Aenean elit nibh, scelerisque et semper vel, interdum non nisi. Nulla rhoncus commodo ultricies. Vivamus vitae enim quis elit volutpat dignissim. Vestibulum vitae nibh ac quam dignissim sagittis sed vitae nisl. Mauris aliquet velit mollis, pretium mi nec, suscipit lorem.
+
+            Duis in feugiat leo. Sed semper lorem eget cursus cursus. Cras ullamcorper quam sed quam sollicitudin facilisis. Proin sagittis finibus neque tristique pretium. Pellentesque eget elit maximus tortor rutrum bibendum. Cras condimentum est ante, sed tincidunt justo imperdiet eget. Nunc tempor sem in sapien interdum, in venenatis dolor suscipit. Aliquam ac mattis tellus, a ultricies dui.
+
+            Mauris nisi tortor, volutpat ut turpis vel, aliquet sodales nibh. Nulla cursus ante a risus fermentum tristique. Praesent nec elit a urna dictum commodo. Aenean vitae dui dignissim, viverra lorem nec, venenatis dui. Nulla odio lectus, finibus a lacus quis, semper pellentesque risus. Vivamus eget ex accumsan, ornare velit id, sodales lorem. Vestibulum nec dictum risus. Sed elementum odio erat, eget imperdiet velit consectetur non. Duis vehicula eros leo, id scelerisque mauris congue vitae. Aliquam aliquet lacus et ipsum facilisis, vitae blandit tortor faucibus. Donec iaculis facilisis egestas. Ut ornare ullamcorper nunc, a eleifend enim mollis id.
+
+            Phasellus sodales nisl et commodo ultrices. Proin a viverra ante. Fusce nunc augue, ullamcorper ut eleifend vel, ullamcorper vitae augue. Integer faucibus ornare ante at varius. Nam condimentum non nunc id tincidunt. Donec imperdiet, purus eu suscipit lacinia, felis purus consequat nunc, eget aliquam diam lectus vel orci. Donec eleifend justo eget nunc imperdiet, nec varius nibh luctus. Phasellus eleifend lacus lectus. Vivamus arcu justo, porta ac porta sit amet, tempor sit amet dolor. Aliquam consectetur lectus ac accumsan ornare. Quisque nibh lectus, suscipit in lacus eu, tincidunt aliquam lectus. Nulla massa erat, finibus ut est eget, finibus laoreet purus. Duis volutpat sed orci vitae interdum. Aenean nunc tellus, dictum porttitor malesuada in, maximus a odio.
+
+            Praesent tincidunt eros justo, at dignissim neque elementum tincidunt. Sed posuere efficitur eros, et blandit tellus lobortis eget. Quisque ut nisl tortor. Integer eu mauris sit amet odio euismod ullamcorper eget ut nisi. Morbi orci ligula, dignissim in nibh eu, faucibus efficitur ipsum. Nullam accumsan nisl nunc, quis ultrices ipsum consequat eget. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.
+
+            Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Praesent tristique euismod eleifend. Cras porttitor lacinia aliquet. Interdum et malesuada fames ac ante ipsum primis in faucibus. Maecenas sed quam eu felis ultrices egestas id sit amet nibh. In lorem tortor, interdum sed neque sit amet, dictum luctus eros. Ut viverra felis in ex maximus blandit. Cras et risus iaculis, vehicula lorem vel, tristique velit. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Nulla quam turpis, aliquam sit amet nulla vitae, luctus gravida metus. Ut imperdiet fringilla euismod. Fusce velit lorem, mattis sed fermentum id, feugiat id arcu. Aenean commodo vitae nulla a tristique. Etiam tincidunt urna ac ullamcorper iaculis.
+        </p>
+    </div>
+
+    <div class="Food" id="Food" style="padding-left:16px">
+        <h2>Food</h2>
+            <div class="large-8 columns">
+            <div class="row container1">
+                {% for pizza in pizzas %}
+                <div class="large-4 small-4 columns">
+                    <ul class="pricing-table">
+                        <li class="name">{% if pizza.name %} Pizza {{ pizza.name }}{% endif %}</li>
+                        <li class="price">{% if pizza.price %}${{ pizza.price }}{% endif %}</li>
+                        <li class="bullet-item">{% if pizza.vegetarian %}Veggie{% else %}Not Veggie{% endif %}</li>
+                    </ul>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+<script>
+    function myFunction() {
+        var x = document.getElementById("myPass");
+        if (x.type === "password") {
+            x.type = "text";
+        } else {
+            x.type = "password";
+        }
+    }
+</script>
+
+</div>
+</body>
+</html>
+

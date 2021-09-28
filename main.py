@@ -2,7 +2,7 @@ from flask import jsonify, make_response, render_template
 from flask import request
 
 from app import app
-from modules.mysql_model import save_new_pizza, Pizza, find_single_pizza, delete_pizza
+from modules.mysql_model import save_new_pizza, find_single_pizza, delete_pizza, get_all_pizzas
 
 
 @app.route("/test")
@@ -14,6 +14,12 @@ def get_test():
 def get_pizza(name):
     pizza = find_single_pizza(name)
     return render_template('show_pizza.html', name=name, vegetarian=pizza.vegetarian, price=pizza.price)
+
+
+@app.route("/menu")
+def get_menu():
+    pizzas = get_all_pizzas()
+    return render_template('show_menu.html', pizzas=pizzas)
 
 
 @app.route("/create", methods=["POST"])
