@@ -1,3 +1,4 @@
+import flask
 from flask import jsonify, make_response, render_template
 from flask import request
 
@@ -14,6 +15,11 @@ def get_test():
 def get_pizza(name):
     pizza = find_single_pizza(name)
     return render_template('show_pizza.html', name=name, vegetarian=pizza.vegetarian, price=pizza.price)
+
+
+@app.route("/")
+def get():
+    return flask.redirect("/menu")
 
 
 @app.route("/menu")
