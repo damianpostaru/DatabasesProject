@@ -28,9 +28,10 @@ def create_pizza():
     name = data["name"]
     vegetarian = data["vegetarian"]
     price = data["price"]
+    ingredients = data["ingredients"]
 
     try:
-        save_new_pizza(name, vegetarian, price)
+        save_new_pizza(name, vegetarian, price, ingredients)
     except Exception as e:
         return make_response({"error": f"could not add pizza {str(e)}"}, 400)
     return make_response({"result": "success"}, 200)

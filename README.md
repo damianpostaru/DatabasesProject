@@ -6,4 +6,4 @@
     docker-compose up
 ##3. Start server
 ###Run in cmd:
-    flask run
+    python main.py
