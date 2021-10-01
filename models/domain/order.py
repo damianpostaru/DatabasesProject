@@ -1,4 +1,4 @@
-from modules.mysql_model import db
+from models.mysql_model import db
 
 
 class Order(db.Model):

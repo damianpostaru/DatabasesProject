@@ -1,1 +1,1 @@
-CREATE DATABASE IF NOT EXISTS pizzeria;
+create database pizzeria;

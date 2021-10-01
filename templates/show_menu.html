@@ -110,24 +110,31 @@
     <div class="Home" id="Home" style="padding-left:16px">
         <h2>Pizzeria</h2>
         <img class="Slides" id="image0" src="/static/images/pizza.jpg" alt="image of a pizza" style="width: 1000px">
-        <img class="Slides" id="image1" src="/static/images/drinks.jpg" alt="image of some drinks" style="width: 1000px">
+        <img class="Slides" id="image1" src="/static/images/drinks.jpg" alt="image of some drinks"
+             style="width: 1000px">
         <img class="Slides" id="image2" src="/static/images/dessert.jpg" alt="image of a dessert" style="width: 1000px">
     </div>
     <div class="Food" id="Food" style="padding-left:16px">
         <h2>Food</h2>
-            <div class="large-8 columns">
-            <div class="row container1">
-                {% for pizza in pizzas %}
-                <div class="large-4 small-4 columns">
-                    <ul class="pricing-table">
-                        <li class="name">{% if pizza.name %} Pizza {{ pizza.name }}{% endif %}</li>
-                        <li class="price">{% if pizza.price %}${{ pizza.price }}{% endif %}</li>
-                        <li class="bullet-item">{% if pizza.vegetarian %}Veggie{% else %}Not Veggie{% endif %}</li>
-                    </ul>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
+        <ol class="listing-pizzas">
+            {% for pizza in pizzas %}
+                <li class="name">{% if pizza.name %} Pizza {{ pizza.name }}{% endif %}</li>
+                <ul class="pizza-description">
+                    <li class="price">{% if pizza.price %}${{ pizza.price }}{% endif %}</li>
+                    <li class="veggie">{% if pizza.vegetarian %}Veggie{% else %}Not Veggie{% endif %}</li>
+                    <ol class="pizza-ingredients">
+                        {% for ingredient in pizza.ingredients %}
+                            <li class="ingredient">{% if ingredient.name %} {{ ingredient.name }}{% endif %}</li>
+                            <ul class="ingredient-description">
+                                <li class="price">{% if ingredient.price %}${{ ingredient.price }}{% endif %}</li>
+                                <li class="veggie">{% if ingredient.vegetarian %}Veggie{% else %}Not
+                                    Veggie{% endif %}</li>
+                            </ul>
+                        {% endfor %}
+                    </ol>
+                </ul>
+            {% endfor %}
+        </ol>
     </div>
     <div class="Drinks" id="Drinks">
         <h2>Drinks</h2>
