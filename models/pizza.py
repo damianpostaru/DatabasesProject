@@ -1,4 +1,4 @@
-from modules.mysql_model import db
+from app import db
 
 
 class Pizza(db.Model):
@@ -6,7 +6,7 @@ class Pizza(db.Model):
     name = db.Column(db.String(80), unique=True, nullable=False)
     vegetarian = db.Column(db.Boolean, nullable=False)
     price = db.Column(db.Integer, nullable=False)
-    ingredients = db.relationship('Ingredient', backref='pizza', lazy=True)
+    ingredients = db.relationship('Ingredient', backref='pizza')
 
     @staticmethod
     def deserialize(pizza_d: dict):
@@ -14,3 +14,6 @@ class Pizza(db.Model):
 
     def __repr__(self):
         return f"Pizza {self.name}, vegetarian:{self.vegetarian}, with price {self.price}"
+
+
+db.create_all()

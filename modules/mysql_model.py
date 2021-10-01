@@ -1,13 +1,11 @@
-from flask_sqlalchemy import SQLAlchemy
-
-from app import app
-
-# app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://pizzeria-owner:n&jPrqRZL3r3sV7K@localhost:3307/pizzeria"
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://root:Artefact@localhost:3306/pizzeria"
-db = SQLAlchemy(app)
-
+from app import db
 from models.pizza import Pizza
 from models.ingredient import Ingredient
+from models.dessert import Dessert
+from models.drink import Drink
+from models.order import Order
+from models.order_content import order_content
+from models.driver import Driver
 
 
 def save_new_pizza(name, vegetarian, price, ingredients):
@@ -44,6 +42,13 @@ def show_ingredients(name):
         print(ingredient)
 
 
-show_ingredients("Margherita")
+def save_new_order(address, customer_name, customer_number, order_time, pizzas, desserts, drinks):
+    new_order = Order(address, customer_name, customer_number, order_time, pizzas, desserts, drinks)
+    db.session.add(new_order)
+    db.session.commit()
+    return new_order
+
+
+# show_ingredients("Margherita")
 # delete_pizza("Margherita")
 db.create_all()
