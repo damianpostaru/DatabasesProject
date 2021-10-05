@@ -2,9 +2,7 @@ import flask
 from flask import make_response, render_template
 from flask import request
 
-from app import app
 from models.mysql_model import *
-
 
 
 @app.route("/test")
@@ -29,6 +27,20 @@ def get_menu():
     drinks = get_all_drinks()
     desserts = get_all_desserts()
     return render_template('show_menu.html', pizzas=pizzas, drinks=drinks, desserts=desserts)
+
+
+@app.route("/create/driver", methods=["POST"])
+def create_drive():
+    data = request.json
+    first_name = data["first_name"]
+    last_name = data["last_name"]
+    working_area = data["working_area"]
+
+    try:
+        save_new_driver(first_name, last_name, working_area)
+    except Exception as e:
+        return make_response({"error": f"could not add drive {str(e)}"}, 400)
+    return make_response({"result": "success"}, 200)
 
 
 @app.route("/create/pizza", methods=["POST"])

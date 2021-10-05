@@ -9,15 +9,13 @@ from models.pizza import Pizza
 from models.dessert import Dessert
 from models.drink import Drink
 from models.menu_item import MenuItem
+from models.driver import Driver
 from models.order import Order
 from models.order_item import OrderItem
-from models.driver import Driver
 
 scheduler = APScheduler()
 scheduler.init_app(app)
 scheduler.start()
-
-INTERVAL_TASK_ID = 'preparation-time-id'
 
 
 def save_new_pizza(name, ingredients):
@@ -108,17 +106,23 @@ def save_new_order(address, customer_name, customer_number, order_items):
                       order_items=new_order_items)
     db.session.add(new_order)
     db.session.commit()
+    order_id = new_order.id
 
     def change_status():
-        # new_order.status = "Out For Delivery"
-        change_order = find_order(new_order.id)
+        change_order = find_order(order_id)
         change_order.status = "Out For Delivery"
         db.session.commit()
-        print("Pls")
 
     scheduler.add_job(id='preparation-time-id', func=change_status,
-                      trigger=DateTrigger(order_time + timedelta(minutes=1)))
+                      trigger=DateTrigger(order_time + timedelta(minutes=0.1)))
     return new_order
+
+
+def save_new_driver(first_name, last_name, working_area):
+    new_driver = Driver(first_name=first_name, last_name=last_name, working_area=working_area)
+    db.session.add(new_driver)
+    db.session.commit()
+    return new_driver
 
 
 def find_order(order_id):
@@ -139,6 +143,13 @@ def cancel_order(order_id):
     db.session.commit()
 
 
-# show_ingredients("Margherita")
-# delete_pizza("Margherita")
+def are_there_available_drivers():
+    drivers = db.session.query(Driver)
+    for driver in drivers:
+        if driver.available:
+            return True
+    return False
+
+
+print(are_there_available_drivers())
 db.create_all()
