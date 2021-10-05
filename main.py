@@ -3,7 +3,7 @@ from flask import jsonify, make_response, render_template
 from flask import request
 
 from app import app
-from models.mysql_model import save_new_pizza, find_single_pizza, delete_pizza, get_all_pizzas, save_new_drink, \
+from modules.mysql_model import save_new_pizza, find_single_pizza, delete_pizza, get_all_pizzas, save_new_drink, \
     save_new_dessert, save_new_order
 
 
@@ -77,7 +77,7 @@ def order():
     order_items = data["order_items"]
 
     try:
-        save_new_order(order_items)
+        save_new_order(address, customer_name, customer_number, order_items)
     except Exception as e:
         return make_response({"error": f"could not order {str(e)}"}, 400)
     return make_response({"result": "success"}, 200)

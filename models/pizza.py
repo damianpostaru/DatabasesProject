@@ -1,4 +1,4 @@
-from models.mysql_model import db
+from app import db
 
 
 class Pizza(db.Model):
@@ -14,3 +14,6 @@ class Pizza(db.Model):
 
     def __repr__(self):
         return f"Pizza {self.name}, vegetarian:{self.vegetarian}, with price {self.price}"
+
+
+db.create_all()
