@@ -1,14 +1,13 @@
 from datetime import date
 
 from app import db
-from models.pizza import Pizza
-from models.ingredient import Ingredient
 from models.dessert import Dessert
 from models.drink import Drink
+from models.ingredient import Ingredient
 from models.menu_item import MenuItem
 from models.order import Order
 from models.order_item import OrderItem
-from models.driver import Driver
+from models.pizza import Pizza
 
 
 def save_new_pizza(name, ingredients):
@@ -69,6 +68,14 @@ def get_all_pizzas():
     return Pizza.query.all()
 
 
+def get_all_drinks():
+    return Drink.query.all()
+
+
+def get_all_desserts():
+    return Dessert.query.all()
+
+
 def show_ingredients(name):
     pizza = find_single_pizza(name)
     if len(pizza.ingredients) == 0:
@@ -82,7 +89,8 @@ def save_new_order(address, customer_name, customer_number, order_items):
     new_order_items = []
     for item in order_items:
         new_order_items.append(OrderItem(menu_item=item['menu_item'], quantity=item['quantity']))
-    new_order = Order(address=address, customer_name=customer_name, customer_number=customer_number, order_time=order_time, order_items=new_order_items)
+    new_order = Order(address=address, customer_name=customer_name, customer_number=customer_number,
+                      order_time=order_time, order_items=new_order_items)
     db.session.add(new_order)
     db.session.commit()
     return new_order

@@ -126,7 +126,7 @@
                         {% for ingredient in pizza.ingredients %}
                             <li class="ingredient">{% if ingredient.name %} {{ ingredient.name }}{% endif %}</li>
                             <ul class="ingredient-description">
-                                <li class="price">{% if ingredient.price %}${{ ingredient.price }}{% endif %}</li>
+                                <li class="price">{% if ingredient.price %}€{{ ingredient.price }}{% endif %}</li>
                                 <li class="veggie">{% if ingredient.vegetarian %}Veggie{% else %}Not
                                     Veggie{% endif %}</li>
                             </ul>
@@ -138,20 +138,37 @@
     </div>
     <div class="Drinks" id="Drinks">
         <h2>Drinks</h2>
+        <ol class="listing-drinks">
+            {% for drink in drinks %}
+                <li class="name">{% if drink.name %} Drink {{ drink.name }}{% endif %}</li>
+                <ul class="drink-description">
+                    <li class="price">{% if drink.price %}€{{ drink.price }}{% endif %}</li>
+                </ul>
+            {% endfor %}
+        </ol>
     </div>
 
     <div class="Desserts" id="Desserts">
         <h2>Desserts</h2>
+        <ol class="listing-desserts">
+            {% for dessert in desserts %}
+                <li class="name">{% if dessert.name %} Dessert {{ dessert.name }}{% endif %}</li>
+                <ul class="dessert-description">
+                    <li class="price">{% if dessert.price %}€{{ dessert.price }}{% endif %}</li>
+                </ul>
+            {% endfor %}
+        </ol>
     </div>
 
     <script>
-    // Automatic Slideshow - change image every 3 seconds
-    let myIndex = 0;
-    function myFunction() {
-        let x = document.getElementById("myPass");
-        if (x.type === "password") {
-            x.type = "text";
-        } else {
+        // Automatic Slideshow - change image every 3 seconds
+        let myIndex = 0;
+
+        function myFunction() {
+            let x = document.getElementById("myPass");
+            if (x.type === "password") {
+                x.type = "text";
+            } else {
             x.type = "password";
         }
     }

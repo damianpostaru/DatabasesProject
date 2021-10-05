@@ -3,8 +3,7 @@ from flask import jsonify, make_response, render_template
 from flask import request
 
 from app import app
-from modules.mysql_model import save_new_pizza, find_single_pizza, delete_pizza, get_all_pizzas, save_new_drink, \
-    save_new_dessert, save_new_order
+from models.mysql_model import *
 
 
 @app.route("/test")
@@ -26,7 +25,9 @@ def get():
 @app.route("/menu")
 def get_menu():
     pizzas = get_all_pizzas()
-    return render_template('show_menu.html', pizzas=pizzas)
+    drinks = get_all_drinks()
+    desserts = get_all_desserts()
+    return render_template('show_menu.html', pizzas=pizzas, drinks=drinks, desserts=desserts)
 
 
 @app.route("/create/pizza", methods=["POST"])
@@ -81,7 +82,6 @@ def order():
     except Exception as e:
         return make_response({"error": f"could not order {str(e)}"}, 400)
     return make_response({"result": "success"}, 200)
-
 
 
 @app.route("/delete/<name>", methods=["POST"])
