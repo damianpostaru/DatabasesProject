@@ -1,7 +1,9 @@
-from datetime import datetime
-import time
+from datetime import datetime, timedelta
 
-from app import db
+from flask_apscheduler import APScheduler
+from apscheduler.triggers.date import DateTrigger
+
+from app import db, app
 from models.ingredient import Ingredient
 from models.pizza import Pizza
 from models.dessert import Dessert
@@ -10,6 +12,12 @@ from models.menu_item import MenuItem
 from models.order import Order
 from models.order_item import OrderItem
 from models.driver import Driver
+
+scheduler = APScheduler()
+scheduler.init_app(app)
+scheduler.start()
+
+INTERVAL_TASK_ID = 'preparation-time-id'
 
 
 def save_new_pizza(name, ingredients):
@@ -89,7 +97,7 @@ def show_ingredients(name):
 def save_new_order(address, customer_name, customer_number, order_items):
     order_time = datetime.today()
     new_order_items = []
-    status = "Active"
+    status = "In Process"
     for item in order_items:
         new_order_items.append(OrderItem(menu_item=item['menu_item'], quantity=item['quantity']))
     new_order = Order(address=address,
@@ -100,6 +108,16 @@ def save_new_order(address, customer_name, customer_number, order_items):
                       order_items=new_order_items)
     db.session.add(new_order)
     db.session.commit()
+
+    def change_status():
+        # new_order.status = "Out For Delivery"
+        change_order = find_order(new_order.id)
+        change_order.status = "Out For Delivery"
+        db.session.commit()
+        print("Pls")
+
+    scheduler.add_job(id='preparation-time-id', func=change_status,
+                      trigger=DateTrigger(order_time + timedelta(minutes=1)))
     return new_order
 
 
