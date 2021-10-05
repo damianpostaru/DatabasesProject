@@ -1,3 +1,5 @@
+from datetime import date
+
 from app import db
 from models.pizza import Pizza
 from models.ingredient import Ingredient
@@ -9,16 +11,21 @@ from models.order_item import OrderItem
 from models.driver import Driver
 
 
-def save_new_pizza(name, vegetarian, price, ingredients):
+def save_new_pizza(name, ingredients):
     ingredients_list = []
+    calculated_price = 1.0
+    veg_flag = True
     for ingredient in ingredients:
+        calculated_price = calculated_price + ingredient["price"]
+        if not ingredient["vegetarian"]:
+            veg_flag = False
         ingredient_found = Ingredient.query.filter_by(name=ingredient["name"]).first()
         if ingredient_found:
             ingredients_list.append(ingredient_found)
         else:
             ingredients_list.append(
                 Ingredient(name=ingredient["name"], vegetarian=ingredient["vegetarian"], price=ingredient["price"]))
-    new_pizza = Pizza(name=name, vegetarian=vegetarian, price=price, ingredients=ingredients_list)
+    new_pizza = Pizza(name=name, vegetarian=veg_flag, price=calculated_price, ingredients=ingredients_list)
     db.session.add(new_pizza)
     db.session.commit()
     new_menu_item = MenuItem(pizza_id=new_pizza.id, drink_id=None, dessert_id=None)
@@ -70,7 +77,8 @@ def show_ingredients(name):
         print(ingredient)
 
 
-def save_new_order(order_items):
+def save_new_order(address, customer_name, customer_number, order_items):
+    order_time = date.today()
     new_order_items = []
     for item in order_items:
         new_order_items.append(OrderItem(menu_item=item['menu_item'], quantity=item['quantity']))

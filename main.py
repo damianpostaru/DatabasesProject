@@ -33,12 +33,10 @@ def get_menu():
 def create_pizza():
     data = request.json
     name = data["name"]
-    vegetarian = data["vegetarian"]
-    price = data["price"]
     ingredients = data["ingredients"]
 
     try:
-        save_new_pizza(name, vegetarian, price, ingredients)
+        save_new_pizza(name, ingredients)
     except Exception as e:
         return make_response({"error": f"could not add pizza {str(e)}"}, 400)
     return make_response({"result": "success"}, 200)
@@ -73,6 +71,9 @@ def create_dessert():
 @app.route("/order", methods=["POST"])
 def order():
     data = request.json
+    address = data["address"]
+    customer_name = data["customer_name"]
+    customer_number = data["customer_number"]
     order_items = data["order_items"]
 
     try:
