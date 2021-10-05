@@ -1,8 +1,9 @@
-from datetime import date
+from datetime import datetime
+import time
 
 from app import db
-from models.pizza import Pizza
 from models.ingredient import Ingredient
+from models.pizza import Pizza
 from models.dessert import Dessert
 from models.drink import Drink
 from models.menu_item import MenuItem
@@ -86,15 +87,38 @@ def show_ingredients(name):
 
 
 def save_new_order(address, customer_name, customer_number, order_items):
-    order_time = date.today()
+    order_time = datetime.today()
     new_order_items = []
     status = "Active"
     for item in order_items:
         new_order_items.append(OrderItem(menu_item=item['menu_item'], quantity=item['quantity']))
-    new_order = Order(address=address, customer_name=customer_name, customer_number=customer_number, order_time=order_time, status=status, order_items=new_order_items)
+    new_order = Order(address=address,
+                      customer_name=customer_name,
+                      customer_number=customer_number,
+                      order_time=order_time,
+                      status=status,
+                      order_items=new_order_items)
     db.session.add(new_order)
     db.session.commit()
     return new_order
+
+
+def find_order(order_id):
+    order = Order.query.filter_by(id=order_id).first_or_404(description='There is no order with id {}'.format(order_id))
+    return order
+
+
+def cancel_order(order_id):
+    order = find_order(order_id)
+    current_time = datetime.now()
+    if order.status == "Cancelled":
+        raise Exception("Order already cancelled.")
+    if order.status == "Delivered":
+        raise Exception("Order already delivered.")
+    if ((current_time - order.order_time).seconds / 60) > 5:
+        raise Exception("5 minutes have passed")
+    order.status = "Cancelled"
+    db.session.commit()
 
 
 # show_ingredients("Margherita")

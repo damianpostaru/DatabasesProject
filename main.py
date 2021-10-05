@@ -84,14 +84,14 @@ def order():
     return make_response({"result": "success"}, 200)
 
 
-@app.route("/delete/<name>", methods=["POST"])
+@app.route("/cancel", methods=["POST"])
 def remove_pizza():
     data = request.json
-    name = data["name"]
+    order_id = data["order_id"]
     try:
-        delete_pizza(name)
+        cancel_order(order_id)
     except Exception as e:
-        return make_response({"error": f"could not delete pizza {str(e)}"}, 400)
+        return make_response({"error": f"could not cancel order {str(e)}"}, 400)
     return make_response({"result": "success"}, 200)
 
 
