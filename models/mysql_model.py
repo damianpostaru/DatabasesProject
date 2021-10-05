@@ -69,6 +69,14 @@ def get_all_pizzas():
     return Pizza.query.all()
 
 
+def get_all_drinks():
+    return Drink.query.all()
+
+
+def get_all_desserts():
+    return Dessert.query.all()
+
+
 def show_ingredients(name):
     pizza = find_single_pizza(name)
     if len(pizza.ingredients) == 0:
