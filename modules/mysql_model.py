@@ -12,8 +12,12 @@ from models.driver import Driver
 def save_new_pizza(name, vegetarian, price, ingredients):
     ingredients_list = []
     for ingredient in ingredients:
-        ingredients_list.append(
-            Ingredient(name=ingredient["name"], vegetarian=ingredient["vegetarian"], price=ingredient["price"]))
+        ingredient_found = Ingredient.query.filter_by(name=ingredient["name"]).first()
+        if ingredient_found:
+            ingredients_list.append(ingredient_found)
+        else:
+            ingredients_list.append(
+                Ingredient(name=ingredient["name"], vegetarian=ingredient["vegetarian"], price=ingredient["price"]))
     new_pizza = Pizza(name=name, vegetarian=vegetarian, price=price, ingredients=ingredients_list)
     db.session.add(new_pizza)
     db.session.commit()
@@ -66,14 +70,14 @@ def show_ingredients(name):
         print(ingredient)
 
 
-# def save_new_order(pizzas):
-#     new_pizzas = []
-#     for pizza in pizzas:
-#         new_pizzas.append(Pizzas(pizza_id=pizza["pizza_id"]))
-#     new_order = Order(pizzas=pizzas)
-#     db.session.add(new_order)
-#     db.session.commit()
-#     return new_order
+def save_new_order(order_items):
+    new_order_items = []
+    for item in order_items:
+        new_order_items.append(OrderItem(menu_item=item['menu_item'], quantity=item['quantity']))
+    new_order = Order(order_items=new_order_items)
+    db.session.add(new_order)
+    db.session.commit()
+    return new_order
 
 
 # show_ingredients("Margherita")

@@ -4,7 +4,7 @@ from flask import request
 
 from app import app
 from modules.mysql_model import save_new_pizza, find_single_pizza, delete_pizza, get_all_pizzas, save_new_drink, \
-    save_new_dessert
+    save_new_dessert, save_new_order
 
 
 @app.route("/test/test")
@@ -70,16 +70,16 @@ def create_dessert():
     return make_response({"result": "success"}, 200)
 
 
-# @app.route("/order", methods=["POST"])
-# def order():
-#     data = request.json
-#     pizzas = data["pizzas"]
-#
-#     try:
-#         save_new_order(pizzas)
-#     except Exception as e:
-#         return make_response({"error": f"could not order {str(e)}"}, 400)
-#     return make_response({"result": "success"}, 200)
+@app.route("/order", methods=["POST"])
+def order():
+    data = request.json
+    order_items = data["order_items"]
+
+    try:
+        save_new_order(order_items)
+    except Exception as e:
+        return make_response({"error": f"could not order {str(e)}"}, 400)
+    return make_response({"result": "success"}, 200)
 
 
 
