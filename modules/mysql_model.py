@@ -3,8 +3,9 @@ from models.pizza import Pizza
 from models.ingredient import Ingredient
 from models.dessert import Dessert
 from models.drink import Drink
-# from models.order_content import OrderContent, pizzas
-from models.order import Order, Pizzas
+from models.menu_item import MenuItem
+from models.order import Order
+from models.order_item import OrderItem
 from models.driver import Driver
 
 
@@ -16,7 +17,30 @@ def save_new_pizza(name, vegetarian, price, ingredients):
     new_pizza = Pizza(name=name, vegetarian=vegetarian, price=price, ingredients=ingredients_list)
     db.session.add(new_pizza)
     db.session.commit()
+    new_menu_item = MenuItem(pizza_id=new_pizza.id, drink_id=None, dessert_id=None)
+    db.session.add(new_menu_item)
+    db.session.commit()
     return new_pizza
+
+
+def save_new_drink(name, price):
+    new_drink = Drink(name=name, price=price)
+    db.session.add(new_drink)
+    db.session.commit()
+    new_menu_item = MenuItem(pizza_id=None, drink_id=new_drink.id, dessert_id=None)
+    db.session.add(new_menu_item)
+    db.session.commit()
+    return new_drink
+
+
+def save_new_dessert(name, price):
+    new_dessert = Dessert(name=name, price=price)
+    db.session.add(new_dessert)
+    db.session.commit()
+    new_menu_item = MenuItem(pizza_id=None, drink_id=None, dessert_id=new_dessert.id)
+    db.session.add(new_menu_item)
+    db.session.commit()
+    return new_dessert
 
 
 def find_single_pizza(name):
@@ -42,14 +66,14 @@ def show_ingredients(name):
         print(ingredient)
 
 
-def save_new_order(pizzas):
-    new_pizzas = []
-    for pizza in pizzas:
-        new_pizzas.append(Pizzas(pizza_id=pizza["pizza_id"]))
-    new_order = Order(pizzas=pizzas)
-    db.session.add(new_order)
-    db.session.commit()
-    return new_order
+# def save_new_order(pizzas):
+#     new_pizzas = []
+#     for pizza in pizzas:
+#         new_pizzas.append(Pizzas(pizza_id=pizza["pizza_id"]))
+#     new_order = Order(pizzas=pizzas)
+#     db.session.add(new_order)
+#     db.session.commit()
+#     return new_order
 
 
 # show_ingredients("Margherita")
