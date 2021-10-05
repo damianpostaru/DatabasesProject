@@ -1,4 +1,4 @@
-from modules.mysql_model import db
+from app import db
 
 
 class Ingredient(db.Model):
