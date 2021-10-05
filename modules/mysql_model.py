@@ -80,9 +80,10 @@ def show_ingredients(name):
 def save_new_order(address, customer_name, customer_number, order_items):
     order_time = date.today()
     new_order_items = []
+    status = "Active"
     for item in order_items:
         new_order_items.append(OrderItem(menu_item=item['menu_item'], quantity=item['quantity']))
-    new_order = Order(address=address, customer_name=customer_name, customer_number=customer_number, order_time=order_time, order_items=new_order_items)
+    new_order = Order(address=address, customer_name=customer_name, customer_number=customer_number, order_time=order_time, status=status, order_items=new_order_items)
     db.session.add(new_order)
     db.session.commit()
     return new_order
