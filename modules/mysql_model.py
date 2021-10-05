@@ -3,8 +3,8 @@ from models.pizza import Pizza
 from models.ingredient import Ingredient
 from models.dessert import Dessert
 from models.drink import Drink
-from models.order import Order
-from models.order_content import order_content
+# from models.order_content import OrderContent, pizzas
+from models.order import Order, Pizzas
 from models.driver import Driver
 
 
@@ -42,8 +42,11 @@ def show_ingredients(name):
         print(ingredient)
 
 
-def save_new_order(address, customer_name, customer_number, order_time, pizzas, desserts, drinks):
-    new_order = Order(address, customer_name, customer_number, order_time, pizzas, desserts, drinks)
+def save_new_order(pizzas):
+    new_pizzas = []
+    for pizza in pizzas:
+        new_pizzas.append(Pizzas(pizza_id=pizza["pizza_id"]))
+    new_order = Order(pizzas=pizzas)
     db.session.add(new_order)
     db.session.commit()
     return new_order

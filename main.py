@@ -3,10 +3,10 @@ from flask import jsonify, make_response, render_template
 from flask import request
 
 from app import app
-from modules.mysql_model import save_new_pizza, find_single_pizza, delete_pizza, get_all_pizzas
+from modules.mysql_model import save_new_pizza, find_single_pizza, delete_pizza, get_all_pizzas, save_new_order
 
 
-@app.route("/test")
+@app.route("/test/test")
 def get_test():
     return "Hello World"
 
@@ -41,6 +41,19 @@ def create_pizza():
     except Exception as e:
         return make_response({"error": f"could not add pizza {str(e)}"}, 400)
     return make_response({"result": "success"}, 200)
+
+
+@app.route("/order", methods=["POST"])
+def order():
+    data = request.json
+    pizzas = data["pizzas"]
+
+    try:
+        save_new_order(pizzas)
+    except Exception as e:
+        return make_response({"error": f"could not order {str(e)}"}, 400)
+    return make_response({"result": "success"}, 200)
+
 
 
 @app.route("/delete/<name>", methods=["POST"])
