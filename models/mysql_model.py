@@ -201,6 +201,12 @@ def cancel_order(order_id):
         raise Exception("Order already delivered.")
     if ((current_time - order.order_time).seconds / 60) > 5:
         raise Exception("5 minutes have passed")
+    if scheduler.get_job('preparation-time-'f'{order_id}'):
+        scheduler.remove_job('preparation-time-'f'{order_id}')
+    if scheduler.get_job('delivery-time-'f'{order_id}'):
+        scheduler.remove_job('delivery-time-'f'{order_id}')
+    if scheduler.get_job('driver-busy-time-'f'{order_id}'):
+        scheduler.remove_job('driver-busy-time-'f'{order_id}')
     order.status = "Cancelled"
     driver_id = order.driver_id
     driver = find_driver(driver_id)
