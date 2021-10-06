@@ -10,6 +10,8 @@ from models.dessert import Dessert
 from models.drink import Drink
 from models.menu_item import MenuItem
 from models.driver import Driver
+from models.address import Address
+from models.customer import Customer
 from models.order import Order
 from models.order_item import OrderItem
 
@@ -92,18 +94,46 @@ def show_ingredients(name):
         print(ingredient)
 
 
-def save_new_order(address, customer_name, customer_number, order_items):
+def save_new_order(customer, order_items):
     order_time = datetime.today()
     new_order_items = []
     status = "In Process"
     driver = get_first_available_driver()
     driver_id = driver.id
     driver.available = False
+    address = customer["address"]
+    address_found = Address.query.filter_by(street=address["street"],
+                                            house_number=address["house_number"],
+                                            zip_code=address["zip_code"],
+                                            area=address["area"]).first()
+    if address_found:
+        new_address = address_found
+    else:
+        new_address = Address(street=address["street"],
+                              house_number=address["house_number"],
+                              zip_code=address["zip_code"],
+                              area=address["area"])
+    db.session.add(new_address)
+    db.session.commit()
+
+    address_id = new_address.id
+    customer_found = Customer.query.filter_by(first_name=customer["first_name"],
+                                              last_name=customer["last_name"],
+                                              phone_number=customer["phone_number"],
+                                              address_id=address_id).first()
+    if customer_found:
+        new_customer = customer_found
+    else:
+        new_customer = Customer(first_name=customer["first_name"],
+                                last_name=customer["last_name"],
+                                phone_number=customer["phone_number"],
+                                address_id=address_id)
+    db.session.add(new_customer)
+    db.session.commit()
+    customer_id = new_customer.id
     for item in order_items:
         new_order_items.append(OrderItem(menu_item=item['menu_item'], quantity=item['quantity']))
-    new_order = Order(address=address,
-                      customer_name=customer_name,
-                      customer_number=customer_number,
+    new_order = Order(customer_id=customer_id,
                       order_time=order_time,
                       status=status,
                       driver_id=driver_id,

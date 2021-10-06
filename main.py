@@ -85,13 +85,11 @@ def create_dessert():
 @app.route("/order", methods=["POST"])
 def order():
     data = request.json
-    address = data["address"]
-    customer_name = data["customer_name"]
-    customer_number = data["customer_number"]
+    customer = data["customer"]
     order_items = data["order_items"]
 
     try:
-        save_new_order(address, customer_name, customer_number, order_items)
+        save_new_order(customer, order_items)
     except Exception as e:
         return make_response({"error": f"could not order: {str(e)}"}, 400)
     return make_response({"result": "success"}, 200)
