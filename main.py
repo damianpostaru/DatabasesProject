@@ -39,7 +39,7 @@ def create_drive():
     try:
         save_new_driver(first_name, last_name, working_area)
     except Exception as e:
-        return make_response({"error": f"could not add drive {str(e)}"}, 400)
+        return make_response({"error": f"could not add drive: {str(e)}"}, 400)
     return make_response({"result": "success"}, 200)
 
 
@@ -52,7 +52,7 @@ def create_pizza():
     try:
         save_new_pizza(name, ingredients)
     except Exception as e:
-        return make_response({"error": f"could not add pizza {str(e)}"}, 400)
+        return make_response({"error": f"could not add pizza: {str(e)}"}, 400)
     return make_response({"result": "success"}, 200)
 
 
@@ -65,7 +65,7 @@ def create_drink():
     try:
         save_new_drink(name, price)
     except Exception as e:
-        return make_response({"error": f"could not add drink {str(e)}"}, 400)
+        return make_response({"error": f"could not add drink: {str(e)}"}, 400)
     return make_response({"result": "success"}, 200)
 
 
@@ -78,7 +78,7 @@ def create_dessert():
     try:
         save_new_dessert(name, price)
     except Exception as e:
-        return make_response({"error": f"could not add dessert {str(e)}"}, 400)
+        return make_response({"error": f"could not add dessert: {str(e)}"}, 400)
     return make_response({"result": "success"}, 200)
 
 
@@ -93,7 +93,7 @@ def order():
     try:
         save_new_order(address, customer_name, customer_number, order_items)
     except Exception as e:
-        return make_response({"error": f"could not order {str(e)}"}, 400)
+        return make_response({"error": f"could not order: {str(e)}"}, 400)
     return make_response({"result": "success"}, 200)
 
 
@@ -104,9 +104,10 @@ def remove_pizza():
     try:
         cancel_order(order_id)
     except Exception as e:
-        return make_response({"error": f"could not cancel order {str(e)}"}, 400)
+        return make_response({"error": f"could not cancel order: {str(e)}"}, 400)
     return make_response({"result": "success"}, 200)
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    # app.run(debug=True)
+    app.run()
