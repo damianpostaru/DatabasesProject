@@ -7,3 +7,12 @@
 ##3. Start server
 ###Run in cmd:
     python main.py
+
+#Areas in which the pizzeria delivers
+    -City centre
+    -Wyck
+    -Stokstraat quarter
+    -Sphinx quarter
+    -Céramique
+    -Jeker quarter
+    -Sint Pieter

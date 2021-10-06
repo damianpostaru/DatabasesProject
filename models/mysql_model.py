@@ -1,13 +1,23 @@
-from datetime import date
+from datetime import datetime, timedelta
 
-from app import db
+from flask_apscheduler import APScheduler
+from apscheduler.triggers.date import DateTrigger
+
+from app import db, app
+from models.ingredient import Ingredient
+from models.pizza import Pizza
 from models.dessert import Dessert
 from models.drink import Drink
-from models.ingredient import Ingredient
 from models.menu_item import MenuItem
+from models.driver import Driver
+from models.address import Address
+from models.customer import Customer
 from models.order import Order
 from models.order_item import OrderItem
-from models.pizza import Pizza
+
+scheduler = APScheduler()
+scheduler.init_app(app)
+scheduler.start()
 
 
 def save_new_pizza(name, ingredients):
@@ -84,18 +94,137 @@ def show_ingredients(name):
         print(ingredient)
 
 
-def save_new_order(address, customer_name, customer_number, order_items):
-    order_time = date.today()
+def save_new_order(customer, order_items):
     new_order_items = []
+    driver = get_first_available_driver()
+    driver_id = driver.id
+    driver.available = False
+    address = customer["address"]
+    address_found = Address.query.filter_by(street=address["street"],
+                                            house_number=address["house_number"],
+                                            zip_code=address["zip_code"],
+                                            area=address["area"]).first()
+    if address_found:
+        new_address = address_found
+    else:
+        new_address = Address(street=address["street"],
+                              house_number=address["house_number"],
+                              zip_code=address["zip_code"],
+                              area=address["area"])
+    db.session.add(new_address)
+    db.session.commit()
+
+    address_id = new_address.id
+    customer_found = Customer.query.filter_by(first_name=customer["first_name"],
+                                              last_name=customer["last_name"],
+                                              phone_number=customer["phone_number"],
+                                              address_id=address_id).first()
+    if customer_found:
+        new_customer = customer_found
+    else:
+        new_customer = Customer(first_name=customer["first_name"],
+                                last_name=customer["last_name"],
+                                phone_number=customer["phone_number"],
+                                address_id=address_id)
+    db.session.add(new_customer)
+    db.session.commit()
+    customer_id = new_customer.id
     for item in order_items:
         new_order_items.append(OrderItem(menu_item=item['menu_item'], quantity=item['quantity']))
-    new_order = Order(address=address, customer_name=customer_name, customer_number=customer_number,
-                      order_time=order_time, order_items=new_order_items)
+    new_order = Order(customer_id=customer_id,
+                      order_time=datetime.today(),
+                      status="In Process",
+                      driver_id=driver_id,
+                      order_items=new_order_items)
     db.session.add(new_order)
     db.session.commit()
+    order_id = new_order.id
+    add_jobs_scheduler(order_id)
+
     return new_order
 
 
-# show_ingredients("Margherita")
-# delete_pizza("Margherita")
+def add_jobs_scheduler(order_id):
+    order_time = find_order(order_id).order_time
+
+    def change_status():
+        change_order = find_order(order_id)
+        change_order.status = "Out For Delivery"
+        print("Out For Delivery")
+        db.session.commit()
+
+    def deliver():
+        change_order = find_order(order_id)
+        change_order.status = "Delivered"
+        print("Deliver")
+        db.session.commit()
+
+    def driver_back():
+        change_order = find_order(order_id)
+        busy_driver = find_driver(change_order.driver_id)
+        busy_driver.available = True
+        print("Driver Back")
+        db.session.commit()
+
+    scheduler.add_job(id='preparation-time-'f'{order_id}', func=change_status,
+                      trigger=DateTrigger(order_time + timedelta(minutes=0.1)))
+    scheduler.add_job(id='delivery-time-'f'{order_id}', func=deliver,
+                      trigger=DateTrigger(order_time + timedelta(minutes=0.2)))
+    scheduler.add_job(id='driver-busy-time-'f'{order_id}', func=driver_back,
+                      trigger=DateTrigger(order_time + timedelta(minutes=0.4)))
+
+
+def save_new_driver(first_name, last_name, working_area):
+    new_driver = Driver(first_name=first_name, last_name=last_name, working_area=working_area)
+    db.session.add(new_driver)
+    db.session.commit()
+    return new_driver
+
+
+def find_order(order_id):
+    order = Order.query.filter_by(id=order_id).first_or_404(description='There is no order with id {}'.format(order_id))
+    return order
+
+
+def find_driver(driver_id):
+    driver = Driver.query.filter_by(id=driver_id) \
+        .first_or_404(description='There is no driver with id {}'.format(driver_id))
+    return driver
+
+
+def cancel_order(order_id):
+    order = find_order(order_id)
+    current_time = datetime.now()
+    if order.status == "Cancelled":
+        raise Exception("Order already cancelled.")
+    if order.status == "Delivered":
+        raise Exception("Order already delivered.")
+    if ((current_time - order.order_time).seconds / 60) > 5:
+        raise Exception("5 minutes have passed")
+    order.status = "Cancelled"
+    driver_id = order.driver_id
+    driver = find_driver(driver_id)
+    driver.available = True
+
+    db.session.commit()
+
+
+def are_there_available_drivers():
+    drivers = db.session.query(Driver)
+    for driver in drivers:
+        if driver.available:
+            return True
+    return False
+
+
+def get_first_available_driver():
+    if are_there_available_drivers():
+        drivers = db.session.query(Driver)
+        for driver in drivers:
+            if driver.available:
+                return driver
+    else:
+        raise Exception("There are no available drivers.")
+
+
 db.create_all()

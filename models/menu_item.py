@@ -7,6 +7,3 @@ class MenuItem(db.Model):
     drink_id = db.Column(db.Integer, db.ForeignKey('drink.id'), nullable=True, unique=True)
     dessert_id = db.Column(db.Integer, db.ForeignKey('dessert.id'), nullable=True, unique=True)
     order_items = db.relationship("OrderItem", backref='menu_ordered_item')
-
-
-db.create_all()

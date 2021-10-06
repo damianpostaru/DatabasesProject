@@ -1,8 +1,7 @@
 import flask
-from flask import jsonify, make_response, render_template
+from flask import make_response, render_template
 from flask import request
 
-from app import app
 from models.mysql_model import *
 
 
@@ -30,6 +29,20 @@ def get_menu():
     return render_template('show_menu.html', pizzas=pizzas, drinks=drinks, desserts=desserts)
 
 
+@app.route("/create/driver", methods=["POST"])
+def create_drive():
+    data = request.json
+    first_name = data["first_name"]
+    last_name = data["last_name"]
+    working_area = data["working_area"]
+
+    try:
+        save_new_driver(first_name, last_name, working_area)
+    except Exception as e:
+        return make_response({"error": f"could not add drive: {str(e)}"}, 400)
+    return make_response({"result": "success"}, 200)
+
+
 @app.route("/create/pizza", methods=["POST"])
 def create_pizza():
     data = request.json
@@ -39,7 +52,7 @@ def create_pizza():
     try:
         save_new_pizza(name, ingredients)
     except Exception as e:
-        return make_response({"error": f"could not add pizza {str(e)}"}, 400)
+        return make_response({"error": f"could not add pizza: {str(e)}"}, 400)
     return make_response({"result": "success"}, 200)
 
 
@@ -52,7 +65,7 @@ def create_drink():
     try:
         save_new_drink(name, price)
     except Exception as e:
-        return make_response({"error": f"could not add drink {str(e)}"}, 400)
+        return make_response({"error": f"could not add drink: {str(e)}"}, 400)
     return make_response({"result": "success"}, 200)
 
 
@@ -65,46 +78,34 @@ def create_dessert():
     try:
         save_new_dessert(name, price)
     except Exception as e:
-        return make_response({"error": f"could not add dessert {str(e)}"}, 400)
+        return make_response({"error": f"could not add dessert: {str(e)}"}, 400)
     return make_response({"result": "success"}, 200)
 
 
 @app.route("/order", methods=["POST"])
 def order():
     data = request.json
-    address = data["address"]
-    customer_name = data["customer_name"]
-    customer_number = data["customer_number"]
+    customer = data["customer"]
     order_items = data["order_items"]
 
     try:
-        save_new_order(address, customer_name, customer_number, order_items)
+        save_new_order(customer, order_items)
     except Exception as e:
-        return make_response({"error": f"could not order {str(e)}"}, 400)
+        return make_response({"error": f"could not order: {str(e)}"}, 400)
     return make_response({"result": "success"}, 200)
 
 
-@app.route("/delete/<name>", methods=["POST"])
+@app.route("/cancel", methods=["POST"])
 def remove_pizza():
     data = request.json
-    name = data["name"]
+    order_id = data["order_id"]
     try:
-        delete_pizza(name)
+        cancel_order(order_id)
     except Exception as e:
-        return make_response({"error": f"could not delete pizza {str(e)}"}, 400)
+        return make_response({"error": f"could not cancel order: {str(e)}"}, 400)
     return make_response({"result": "success"}, 200)
-
-
-@app.errorhandler(404)
-def not_found():
-    message = {
-        'status': 404,
-        'message': 'Not Found: ' + request.url,
-    }
-    resp = jsonify(message)
-    resp.status_code = 404
-    return resp
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    # app.run(debug=True)
+    app.run()
