@@ -95,9 +95,7 @@ def show_ingredients(name):
 
 
 def save_new_order(customer, order_items):
-    order_time = datetime.today()
     new_order_items = []
-    status = "In Process"
     driver = get_first_available_driver()
     driver_id = driver.id
     driver.available = False
@@ -134,13 +132,20 @@ def save_new_order(customer, order_items):
     for item in order_items:
         new_order_items.append(OrderItem(menu_item=item['menu_item'], quantity=item['quantity']))
     new_order = Order(customer_id=customer_id,
-                      order_time=order_time,
-                      status=status,
+                      order_time=datetime.today(),
+                      status="In Process",
                       driver_id=driver_id,
                       order_items=new_order_items)
     db.session.add(new_order)
     db.session.commit()
     order_id = new_order.id
+    add_jobs_scheduler(order_id)
+
+    return new_order
+
+
+def add_jobs_scheduler(order_id):
+    order_time = find_order(order_id).order_time
 
     def change_status():
         change_order = find_order(order_id)
@@ -167,7 +172,6 @@ def save_new_order(customer, order_items):
                       trigger=DateTrigger(order_time + timedelta(minutes=0.2)))
     scheduler.add_job(id='driver-busy-time-'f'{order_id}', func=driver_back,
                       trigger=DateTrigger(order_time + timedelta(minutes=0.4)))
-    return new_order
 
 
 def save_new_driver(first_name, last_name, working_area):
@@ -223,10 +227,4 @@ def get_first_available_driver():
         raise Exception("There are no available drivers.")
 
 
-# drivers = db.session.query(Driver)
-# for driver in drivers:
-#     driver.available = True
-# db.session.commit()
-
-print(are_there_available_drivers())
 db.create_all()
