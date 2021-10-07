@@ -34,7 +34,8 @@ def save_new_pizza(name, ingredients):
         else:
             ingredients_list.append(
                 Ingredient(name=ingredient["name"], vegetarian=ingredient["vegetarian"], price=ingredient["price"]))
-    calculated_price = calculated_price + 0.4 * calculated_price
+    calculated_price = calculated_price + 0.4 * calculated_price  # 40% profit
+    calculated_price = calculated_price + 0.09 * calculated_price  # 9% VAT
     new_pizza = Pizza(name=name, vegetarian=veg_flag, price=calculated_price, ingredients=ingredients_list)
     db.session.add(new_pizza)
     db.session.commit()
