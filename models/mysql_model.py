@@ -1,19 +1,19 @@
 from datetime import datetime, timedelta
 
-from flask_apscheduler import APScheduler
 from apscheduler.triggers.date import DateTrigger
+from flask_apscheduler import APScheduler
 
 from app import db, app
-from models.ingredient import Ingredient
-from models.pizza import Pizza
-from models.dessert import Dessert
-from models.drink import Drink
-from models.menu_item import MenuItem
-from models.driver import Driver
 from models.address import Address
 from models.customer import Customer
+from models.dessert import Dessert
+from models.drink import Drink
+from models.driver import Driver
+from models.ingredient import Ingredient
+from models.menu_item import MenuItem
 from models.order import Order
 from models.order_item import OrderItem
+from models.pizza import Pizza
 
 scheduler = APScheduler()
 scheduler.init_app(app)
@@ -22,7 +22,7 @@ scheduler.start()
 
 def save_new_pizza(name, ingredients):
     ingredients_list = []
-    calculated_price = 1.0
+    calculated_price = 0
     veg_flag = True
     for ingredient in ingredients:
         calculated_price = calculated_price + ingredient["price"]
@@ -34,6 +34,8 @@ def save_new_pizza(name, ingredients):
         else:
             ingredients_list.append(
                 Ingredient(name=ingredient["name"], vegetarian=ingredient["vegetarian"], price=ingredient["price"]))
+    calculated_price = calculated_price + 0.4 * calculated_price  # 40% profit
+    calculated_price = calculated_price + 0.09 * calculated_price  # 9% VAT
     new_pizza = Pizza(name=name, vegetarian=veg_flag, price=calculated_price, ingredients=ingredients_list)
     db.session.add(new_pizza)
     db.session.commit()
@@ -201,6 +203,12 @@ def cancel_order(order_id):
         raise Exception("Order already delivered.")
     if ((current_time - order.order_time).seconds / 60) > 5:
         raise Exception("5 minutes have passed")
+    if scheduler.get_job('preparation-time-'f'{order_id}'):
+        scheduler.remove_job('preparation-time-'f'{order_id}')
+    if scheduler.get_job('delivery-time-'f'{order_id}'):
+        scheduler.remove_job('delivery-time-'f'{order_id}')
+    if scheduler.get_job('driver-busy-time-'f'{order_id}'):
+        scheduler.remove_job('driver-busy-time-'f'{order_id}')
     order.status = "Cancelled"
     driver_id = order.driver_id
     driver = find_driver(driver_id)

@@ -2,8 +2,10 @@ import flask
 from flask import make_response, render_template
 from flask import request
 
+from client.setup import setup
 from models.mysql_model import *
 
+setup()
 
 @app.route("/test")
 def get_test():
