@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>FOOD ORDER FORM</title>
+</head>
+<body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<form id="form1">
+    <div>
+        <h1>Cart</h1>
+        <div class="click-cart">
+            <div class="cart-row2">
+                <span class="cart-item cart-header cart-column">ITEM    </span>
+                <span class="cart-price cart-header cart-column">PRICE   </span>
+                <span class="cart-quantity cart-header cart-column">QUANTITY</span>
+            </div>
+            <div class="food">
+                <h2>Pizzas</h2>
+                {% for pizza in pizzas %}
+                    <div class="cart-row">
+                        <span class="shop-title" id="{{ pizza.id }}">{{ pizza.name }}</span>
+                        <span class="shop-price">€{{ pizza.price }}</span>
+                        <input class="quantity-input" type="number" value="0"/>
+                        <button class="delete-cart">X</button>
+                        <br>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="drinks">
+                <h2>Drinks</h2>
+                {% for drink in drinks %}
+                    <div class="cart-row">
+                        <span class="shop-title" id="{{ drink.id }}">{{ drink.name }}</span>
+                        <span class="shop-price">€{{ drink.price }}</span>
+                        <input class="quantity-input" type="number" value="0"/>
+                        <button class="delete-cart">X</button>
+                        <br>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="desserts">
+                <h2>Desserts</h2>
+                {% for dessert in desserts %}
+                    <div class="cart-row">
+                        <span class="shop-title" id="{{ dessert.id }}">{{ dessert.name }}</span>
+                        <span class="shop-price">€{{ dessert.price }}</span>
+                        <input class="quantity-input" type="number" value="0"/>
+                        <button class="delete-cart">X</button>
+                        <br>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="clear-checkout">
+                <button class="clear-cart">Clear Cart</button>
+            </div>
+            <div class="cart-total">
+                <strong class="cart-total-title">Total</strong>
+                <span class="cart-total-price">€0</span>
+            </div>
+        </div>
+    </div>
+</form>
+
+<h1>To order</h1>
+<label for="select">Choose delivery: </label>
+<select id="select" onchange="changeDelivery()">
+    <option>--Select--</option>
+    <option>Take away</option>
+    <option>Delivery</option>
+</select>
+<fieldset>
+    <table id="Delivery" style="display: none;margin-left: 100px;background-color: aquamarine">
+        <tr>
+            <td><label for="fn"><input id="fn" type="text" name="fn">first name:</label></td>
+        </tr>
+        <tr>
+            <td><label for="ln"><input id="ln" type="text" name="ln">last name:</label></td>
+        </tr>
+        <tr>
+            <td><label for="as"><input id="as" type="text" name="as">address street:</label></td>
+        </tr>
+        <tr>
+            <td><label for="hn"><input id="hn" type="number" name="hn">house number:</label></td>
+        </tr>
+        <tr>
+            <td><label for="zc"><input id="zc" type="text" name="zc">zipcode :</label></td>
+        </tr>
+        <tr>
+            <td><label for="ar"><input id="ar" type="text" name="ar">area :</label></td>
+        </tr>
+        <tr>
+            <td><label for="mn"><input type="number" id="mobile_number" onfocusout="checkMobile()">mobile number:
+            </label></td>
+        </tr>
+    </table>
+</fieldset>
+<table id="Take away" style="display: none;margin-left: 100px;background-color: aquamarine">
+    <tr>
+        <td><label for="tm">
+            <select name="tm">
+                {% for i in range(0,23) %}
+                    <option> {{ i }} </option>
+                {% endfor %}
+            </select>Pick-up time:
+        </label></td>
+    </tr>
+</table>
+<button class="proceed" onclick="createPostOrder()">Create Order</button>
+</body>
+<script>
+
+    function init() {
+        let removeCartItemButtons = document.querySelectorAll('.delete-cart');
+        for (let i = 0; i < removeCartItemButtons.length; i++) {
+            let button = removeCartItemButtons[i]
+            button.addEventListener('click', removeCartItem)
+        }
+        let quantityInputs = document.querySelectorAll('.quantity-input');
+        for (let i = 0; i < quantityInputs.length; i++) {
+            let input = quantityInputs[i]
+            input.addEventListener('change', quantityChanged);
+        }
+        changeDelivery();
+    }
+
+
+    function changeDelivery() {
+        let select = document.getElementById("select");
+        let sel_delivery = select.options[select.selectedIndex].label;
+        let del = document.getElementById("Delivery"), take = document.getElementById("Take away");
+        del.style.display = "none";
+        take.style.display = "none";
+
+        if (sel_delivery === "Delivery") {
+            del.style.display = "block";
+        } else if (sel_delivery === "Take away") {
+            take.style.display = "block"
+        }
+    }
+
+
+    function checkMobile() {
+        let str = document.getElementById("mobile_number").value;
+        let ptr = /^06[072568][0-9]{7}$/;
+        let check = ptr.test(str);
+        if (!check)
+            alert("Mobile Number is incorrect");
+    }
+
+
+    function removeCartItem(event) {
+        let buttonClicked = event.target;
+        buttonClicked.parentElement.parentElement.remove()
+        updateCartTotal()
+    }
+
+
+    function quantityChanged() {
+        let input = event.target;
+        if (isNaN(input.value) || input.value <= 0) {
+            input.value = 1;
+        }
+        updateCartTotal()
+    }
+
+
+    function updateCartTotal() {
+        let cartItemContainer = document.querySelector('.click-cart');
+        let cartRows = cartItemContainer.querySelectorAll('.cart-row');
+
+        let total = 0
+        for (let i = 0; i < cartRows.length; i++) {
+            let cartRow = cartRows[i]
+            let priceElement = cartRow.querySelector('.shop-price');
+            let quantityElement = cartRow.querySelector('.quantity-input');
+
+            let price = parseFloat(priceElement.innerText.replace('€', ''))
+            let quantity = quantityElement.value
+            total = total + (price * quantity)
+        }
+        total = Math.round(total * 100) / 100
+        document.querySelector('.cart-total-price').innerText = '€' + total;
+    }
+
+
+    function createOrderItems() {
+        let order_items = [];
+        let cartItemContainer = document.querySelector('.click-cart');
+        let cartRows = cartItemContainer.querySelectorAll('.cart-row');
+        for (let i = 0; i < cartRows.length; i++) {
+            let cartRow = cartRows[i];
+            let quantityElement = cartRow.querySelector('.quantity-input');
+            let itemName = cartRow.querySelector('.shop-title').innerText;
+            if (quantityElement.value !== '0') {
+                fetch('/menuItem/' + itemName).then(response => {
+                    return response.json();
+                }).then(body => {
+                    order_items.push({
+                        menu_item: body['id'],
+                        quantity: quantityElement.value
+                    });
+                    return body;
+                })
+            }
+        }
+        return order_items;
+    }
+
+    function createPostOrder() {
+        const body = JSON.stringify({
+            customer: {
+                first_name: document.getElementById("fn").value,
+                last_name: document.getElementById("ln").value,
+                phone_number: document.getElementById("mobile_number").value,
+                address: {
+                    street: document.getElementById("as").value,
+                    house_number: document.getElementById("hn").value,
+                    zip_code: document.getElementById("zc").value,
+                    area: document.getElementById("ar").value,
+                }
+            },
+            order_items: createOrderItems()
+        });
+
+
+        console.log(body);
+
+        $.ajax({
+            type: "POST",
+            url: "/order",
+            contentType: "application/json",
+            data: body,
+            dataType: "json",
+            success: function (response) {
+                console.log(response);
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+    }
+
+    init();
+
+</script>
+</html>

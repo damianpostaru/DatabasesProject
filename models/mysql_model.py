@@ -1,19 +1,19 @@
 from datetime import datetime, timedelta
 
-from flask_apscheduler import APScheduler
 from apscheduler.triggers.date import DateTrigger
+from flask_apscheduler import APScheduler
 
 from app import db, app
-from models.ingredient import Ingredient
-from models.pizza import Pizza
-from models.dessert import Dessert
-from models.drink import Drink
-from models.menu_item import MenuItem
-from models.driver import Driver
 from models.address import Address
 from models.customer import Customer
+from models.dessert import Dessert
+from models.drink import Drink
+from models.driver import Driver
+from models.ingredient import Ingredient
+from models.menu_item import MenuItem
 from models.order import Order
 from models.order_item import OrderItem
+from models.pizza import Pizza
 
 scheduler = APScheduler()
 scheduler.init_app(app)
@@ -64,8 +64,18 @@ def save_new_dessert(name, price):
 
 
 def find_single_pizza(name):
-    pizza = Pizza.query.filter_by(name=name).first_or_404(description='There is no pizza with name {}'.format(name))
+    pizza = Pizza.query.filter_by(name=name).first()
     return pizza
+
+
+def find_single_drink(name):
+    drink = Drink.query.filter_by(name=name).first()
+    return drink
+
+
+def find_single_dessert(name):
+    dessert = Dessert.query.filter_by(name=name).first()
+    return dessert
 
 
 def delete_pizza(name):

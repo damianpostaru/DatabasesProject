@@ -32,25 +32,12 @@
             background-color: #ffe94e;
             color: white;
         }
-        .topnav .login-container {
+
+        .topnav .order-container {
             float: right;
         }
 
-        .topnav input[type=text] {
-            padding: 6px;
-            margin-top: 8px;
-            font-size: 17px;
-            border: none;
-            width:120px;
-        }
-        .topnav input[type=password] {
-            padding: 6px;
-            margin-top: 8px;
-            font-size: 17px;
-            border: none;
-            width:120px;
-        }
-        .topnav .login-container button {
+        .topnav .order-container button {
             float: right;
             padding: 6px 10px;
             margin-top: 8px;
@@ -62,14 +49,16 @@
             cursor: pointer;
         }
 
-        .topnav .login-container button:hover {
+        .topnav .order-container button:hover {
             background-color: #ffa318;
         }
+
         @media screen and (max-width: 600px) {
-            .topnav .login-container {
+            .topnav .order-container {
                 float: none;
             }
-            .topnav a, .topnav input[type=text], .topnav .login-container button {
+
+            .topnav a, .topnav .order-container button {
                 float: none;
                 display: block;
                 text-align: left;
@@ -77,13 +66,8 @@
                 margin: 0;
                 padding: 14px;
             }
-            .topnav input[type=text] {
-                border: 1px solid #ccc;
-            }
-            .topnav input[type=password] {
-                border: 1px solid #ccc;
-            }
         }
+
         .Food, .Drinks, .Desserts, .Home {
             color: #ffbb3f;
         }
@@ -96,16 +80,8 @@
     <a href="#Food">Food</a>
     <a href="#Drinks">Drinks</a>
     <a href="#Desserts">Desserts</a>
-    <div class="login-container">
-        <form action="/index.html">
-            Username: <label for="myUser"></label><input type="text" placeholder="Username" name="username" id="myUser">
-            Password: <label for="myPass"></label><input type="password" placeholder="Password" name="password" id="myPass">
-            <!-- An element to toggle between password visibility -->
-            <label>
-                <input type="checkbox" onclick="myFunction()">
-            </label>Show Password
-            <button type="submit">Login</button>
-        </form>
+    <div class="order-container">
+        <button><a href="/order/form">Place order</a></button>
     </div>
     <div class="Home" id="Home" style="padding-left:16px">
         <h2>Pizzeria</h2>
@@ -163,28 +139,21 @@
     <script>
         // Automatic Slideshow - change image every 3 seconds
         let myIndex = 0;
-
-        function myFunction() {
-            let x = document.getElementById("myPass");
-            if (x.type === "password") {
-                x.type = "text";
-            } else {
-            x.type = "password";
-        }
-    }
-    const carousel = () => {
-        let i;
-        let x = document.getElementsByClassName("Slides");
-        for (i = 0; i < x.length; i++) {
-            x[i].style.display = "none";
-        }
-        myIndex++;
-        if (myIndex > x.length) {myIndex = 1}
-        x[myIndex-1].style.display = "block";
-        setTimeout(carousel, 3000);
-    };
-    carousel();
-</script>
+        const carousel = () => {
+            let i;
+            let x = document.getElementsByClassName("Slides");
+            for (i = 0; i < x.length; i++) {
+                x[i].style.display = "none";
+            }
+            myIndex++;
+            if (myIndex > x.length) {
+                myIndex = 1
+            }
+            x[myIndex - 1].style.display = "block";
+            setTimeout(carousel, 3000);
+        };
+        carousel();
+    </script>
 
 </div>
 </body>

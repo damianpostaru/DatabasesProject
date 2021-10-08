@@ -20,4 +20,4 @@ class Pizza(db.Model):
         return Pizza(**pizza_d)
 
     def __repr__(self):
-        return f"Pizza {self.name}, vegetarian:{self.vegetarian}, with price {self.price}"
+        return f"name: {self.name}, id: {self.id}, vegetarian: {self.vegetarian}, price: {self.price}"

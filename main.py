@@ -1,24 +1,73 @@
 import flask
-from flask import make_response, render_template
+from flask import make_response, render_template, jsonify
 from flask import request
 
 from models.mysql_model import *
 
 
-@app.route("/test")
-def get_test():
-    return "Hello World"
+@app.route('/test', methods=['GET', 'POST'])
+def test():
+    # GET request
+    if request.method == 'GET':
+        message = {'greeting': 'Hello from Flask!'}
+        return jsonify(message)  # serialize and use JSON headers
+
+    # POST request
+    if request.method == 'POST':
+        print(request.get_json())  # parse as JSON
+        return 'Success', 200
 
 
 @app.route("/pizza/<name>")
 def get_pizza(name):
     pizza = find_single_pizza(name)
-    return render_template('show_pizza.html', name=name, vegetarian=pizza.vegetarian, price=pizza.price)
+    return render_template(
+        'show_pizza.html',
+        name=name,
+        vegetarian=pizza.vegetarian,
+        price=pizza.price)
+
+
+@app.route("/pizza_id/<name>")
+def get_pizza_id(name):
+    pizza = find_single_pizza(name)
+
+    if pizza is not None:
+        return jsonify({"id": pizza.id})
+    else:
+        return make_response({"Error": f"Could not find {str(name)}"}, 404)
+
+
+@app.route("/drink_id/<name>")
+def get_drink_id(name):
+    drink = find_single_drink(name)
+
+    if drink is not None:
+        return jsonify({"id": drink.id})
+    else:
+        return make_response({"Error": f"Could not find {str(name)}"}, 404)
+
+
+@app.route("/dessert_id/<name>")
+def get_dessert_id(name):
+    dessert = find_single_dessert(name)
+    if dessert is not None:
+        return jsonify({"id": dessert.id})
+    else:
+        return make_response({"Error": f"Could not find {str(name)}"}, 404)
 
 
 @app.route("/")
 def get():
     return flask.redirect("/menu")
+
+
+@app.route("/order/form")
+def make_order():
+    pizzas = get_all_pizzas()
+    drinks = get_all_drinks()
+    desserts = get_all_desserts()
+    return render_template('order_form.html', pizzas=pizzas, drinks=drinks, desserts=desserts)
 
 
 @app.route("/menu")
@@ -41,6 +90,41 @@ def create_drive():
     except Exception as e:
         return make_response({"error": f"could not add drive: {str(e)}"}, 400)
     return make_response({"result": "success"}, 200)
+
+
+@app.route("/menuItem/<name>")
+def get_menu_item_name(name):
+    x = "/menuItem/"
+    pizza = find_single_pizza(name)
+    drink = find_single_drink(name)
+    dessert = find_single_dessert(name)
+    if pizza is not None:
+        x = f"{x}{pizza.id}/0/0"
+    if drink is not None:
+        x = f"{x}0/{drink.id}/0"
+    if dessert is not None:
+        x = f"{x}0/0/{dessert.id}"
+    return flask.redirect(x)
+
+
+@app.route("/menuItem/<pizza_id>/<drink_id>/<dessert_id>")
+def get_menu_item_id(pizza_id, drink_id, dessert_id):
+    if pizza_id == '0':
+        pi = None
+    else:
+        pi = pizza_id
+    if drink_id == '0':
+        dr = None
+    else:
+        dr = drink_id
+    if dessert_id == '0':
+        de = None
+    else:
+        de = dessert_id
+
+    item = MenuItem.query.filter_by(pizza_id=pi, drink_id=dr, dessert_id=de).first()
+
+    return jsonify(id=item.id)
 
 
 @app.route("/create/pizza", methods=["POST"])
@@ -107,5 +191,5 @@ def remove_pizza():
 
 
 if __name__ == "__main__":
-    # app.run(debug=True)
-    app.run()
+    app.run(debug=True)
+    # app.run()
