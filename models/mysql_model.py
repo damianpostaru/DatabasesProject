@@ -98,7 +98,9 @@ def show_ingredients(name):
 
 def save_new_order(customer, order_items):
     new_order_items = []
-    driver = get_first_available_driver()
+    customer_address = customer["address"]
+    customer_area = customer_address["area"]
+    driver = get_first_available_driver(customer_area)
     driver_id = driver.id
     driver.available = False
     address = customer["address"]
@@ -188,6 +190,11 @@ def find_order(order_id):
     return order
 
 
+def find_address(address_id):
+    address = Address.query.filter_by(id=address_id).first_or_404(description='There is no address with id {}'.format(address_id))
+    return address
+
+
 def find_driver(driver_id):
     driver = Driver.query.filter_by(id=driver_id) \
         .first_or_404(description='There is no driver with id {}'.format(driver_id))
@@ -225,12 +232,13 @@ def are_there_available_drivers():
     return False
 
 
-def get_first_available_driver():
+def get_first_available_driver(area):
     if are_there_available_drivers():
         drivers = db.session.query(Driver)
         for driver in drivers:
-            if driver.available:
+            if driver.available and driver.working_area == area:
                 return driver
+        raise Exception("There are no available drivers for your area.")
     else:
         raise Exception("There are no available drivers.")
 
