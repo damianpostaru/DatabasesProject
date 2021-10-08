@@ -2,6 +2,8 @@ from datetime import datetime, timedelta
 
 from apscheduler.triggers.date import DateTrigger
 from flask_apscheduler import APScheduler
+import pymysql
+
 
 from app import db, app
 from models.address import Address
@@ -18,7 +20,7 @@ from models.pizza import Pizza
 scheduler = APScheduler()
 scheduler.init_app(app)
 scheduler.start()
-
+pymysql.install_as_MySQLdb()
 
 def save_new_pizza(name, ingredients):
     ingredients_list = []
