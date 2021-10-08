@@ -170,6 +170,7 @@ def add_jobs_scheduler(order_id):
         print("Driver Back")
         db.session.commit()
 
+    # TODO: Change the times
     scheduler.add_job(id='preparation-time-'f'{order_id}', func=change_status,
                       trigger=DateTrigger(order_time + timedelta(minutes=0.1)))
     scheduler.add_job(id='delivery-time-'f'{order_id}', func=deliver,
@@ -191,7 +192,8 @@ def find_order(order_id):
 
 
 def find_address(address_id):
-    address = Address.query.filter_by(id=address_id).first_or_404(description='There is no address with id {}'.format(address_id))
+    address = Address.query.filter_by(id=address_id).first_or_404(
+        description='There is no address with id {}'.format(address_id))
     return address
 
 
