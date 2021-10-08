@@ -7,6 +7,7 @@ from models.mysql_model import *
 
 setup()
 
+
 @app.route("/test")
 def get_test():
     return "Hello World"
