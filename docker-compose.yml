@@ -2,13 +2,31 @@ version: "3.7"
 
 services:
 
+
   pizzeria-db:
     container_name: pizzeria-db
     image: mysql:latest
     restart: always
+    command: [ "--default-authentication-plugin=mysql_native_password" ]
     volumes:
       - ./data/mysql:/var/lib/mysql
     env_file:
       - services/mysql/.env
     ports:
       - "3307:3306"
+
+  pizzeria-server:
+    container_name: pizzeria-server
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    env_file:
+      - services/mysql/.env
+    ports:
+      - "5000:5000"
+    links:
+      - "pizzeria-db"
+    depends_on:
+      - "pizzeria-db"
+
