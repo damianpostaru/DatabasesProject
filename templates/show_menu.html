@@ -71,6 +71,17 @@
         .Food, .Drinks, .Desserts, .Home {
             color: #ffbb3f;
         }
+
+        .name-box {
+            font-size: 20px;
+            background-color: #ffa318;
+            border-color: #ff5858;
+            padding-right: 50px;
+            color: #333333;
+            height: 30px;
+            margin-top: 10px;
+        }
+
     </style>
     <title>Menu</title>
 </head>
@@ -91,44 +102,60 @@
         <img class="Slides" id="image2" src="/static/images/dessert.jpg" alt="image of a dessert" style="width: 1000px">
     </div>
     <div class="Food" id="Food" style="padding-left:16px">
-        <h2>Food</h2>
-        <ol class="listing-pizzas">
+        <h2 style="font-size: 30px; color: #ff5858">Food</h2>
+        <ol id="pizza-table" style="margin-left: 10px;alignment: center;text-align: left">
+            <script>showPizza = (name) => {
+                window.location.assign('http://localhost:5000/pizza/' + name);
+            }</script>
             {% for pizza in pizzas %}
-                <li class="name">{% if pizza.name %} Pizza {{ pizza.name }}{% endif %}</li>
+                <button class="name-box" onclick=" showPizza( '{{ pizza.name }}' )">
+                    {% if pizza.name %} Pizza {{ pizza.name }} {% endif %} </button>
                 <ul class="pizza-description">
-                    <li class="price">{% if pizza.price %}${{ pizza.price }}{% endif %}</li>
-                    <li class="veggie">{% if pizza.vegetarian %}Veggie{% else %}Not Veggie{% endif %}</li>
-                    <ol class="pizza-ingredients">
+                    <li class="price" style="font-size: 18px">{% if pizza.price %}${{ pizza.price }}{% endif %}</li>
+                    <li class="veggie" style="font-size: 18px">{% if pizza.vegetarian %}Veggie{% else %}Not
+                        Veggie{% endif %}</li>
+                    <ul class="pizza-ingredients">
                         {% for ingredient in pizza.ingredients %}
-                            <li class="ingredient">{% if ingredient.name %} {{ ingredient.name }}{% endif %}</li>
+                            <li class="ingredient" style="font-size: 13px">{% if ingredient.name %}
+                                {{ ingredient.name }}{% endif %}</li>
                             <ul class="ingredient-description">
-                                <li class="price">{% if ingredient.price %}€{{ ingredient.price }}{% endif %}</li>
-                                <li class="veggie">{% if ingredient.vegetarian %}Veggie{% else %}Not
+                                <li class="price" style="font-size: 11px">{% if ingredient.price %}€
+                                    {{ ingredient.price }}{% endif %}</li>
+                                <li class="veggie" style="font-size: 11px">{% if ingredient.vegetarian %}
+                                    Veggie{% else %}Not
                                     Veggie{% endif %}</li>
                             </ul>
                         {% endfor %}
-                    </ol>
+                    </ul>
                 </ul>
             {% endfor %}
         </ol>
     </div>
     <div class="Drinks" id="Drinks">
-        <h2>Drinks</h2>
+        <h2 style="font-size: 30px; color: #ff5858">Drinks</h2>
         <ol class="listing-drinks">
+            <script>showDrink = (name) => {
+                window.location.assign('http://localhost:5000/drink/' + name);
+            }</script>
             {% for drink in drinks %}
-                <li class="name">{% if drink.name %} Drink {{ drink.name }}{% endif %}</li>
+                <button class="name-box" onclick="showDrink( '{{ drink.name }}' )">{% if drink.name %}
+                    {{ drink.name }}{% endif %}</button>
                 <ul class="drink-description">
-                    <li class="price">{% if drink.price %}€{{ drink.price }}{% endif %}</li>
+                    <li class="price">{% if drink.price %}€ {{ drink.price }}{% endif %}</li>
                 </ul>
             {% endfor %}
         </ol>
     </div>
 
     <div class="Desserts" id="Desserts">
-        <h2>Desserts</h2>
+        <h2 style="font-size: 30px; color: #ff5858">Desserts</h2>
         <ol class="listing-desserts">
+            <script>showDessert = (name) => {
+                window.location.assign('http://localhost:5000/dessert/' + name);
+            }</script>
             {% for dessert in desserts %}
-                <li class="name">{% if dessert.name %} Dessert {{ dessert.name }}{% endif %}</li>
+                <button class="name-box" onclick="showDessert( '{{ dessert.name }}' )">
+                    {% if dessert.name %}{{ dessert.name }}{% endif %}</button>
                 <ul class="dessert-description">
                     <li class="price">{% if dessert.price %}€{{ dessert.price }}{% endif %}</li>
                 </ul>
@@ -153,6 +180,7 @@
             setTimeout(carousel, 3000);
         };
         carousel();
+
     </script>
 
 </div>

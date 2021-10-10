@@ -30,6 +30,24 @@ def get_pizza(name):
         price=pizza.price)
 
 
+@app.route("/drink/<name>")
+def get_drink(name):
+    drink = find_single_drink(name)
+    return render_template(
+        'show_drink.html',
+        name=name,
+        price=drink.price)
+
+
+@app.route("/dessert/<name>")
+def get_dessert(name):
+    dessert = find_single_dessert(name)
+    return render_template(
+        'show_dessert.html',
+        name=name,
+        price=dessert.price)
+
+
 @app.route("/pizza_id/<name>")
 def get_pizza_id(name):
     pizza = find_single_pizza(name)
