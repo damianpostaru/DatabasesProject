@@ -110,7 +110,8 @@ def save_new_order(customer, order_items):
     new_order_items = []
     customer_address = customer["address"]
     customer_area = customer_address["area"]
-    driver = get_first_available_driver(customer_area)
+    customer_zip_code = customer_address["zip_code"]
+    driver = get_first_available_driver(customer_area, customer_zip_code)
     driver_id = driver.id
     driver.available = False
     address = customer["address"]
@@ -212,6 +213,11 @@ def find_driver(driver_id):
         .first_or_404(description='There is no driver with id {}'.format(driver_id))
     return driver
 
+def find_customer(customer_id):
+    customer = Customer.query.filter_by(id=customer_id) \
+        .first_or_404(description='There is no driver with id {}'.format(customer_id))
+    return customer
+
 
 def cancel_order(order_id):
     order = find_order(order_id)
@@ -244,15 +250,27 @@ def are_there_available_drivers():
     return False
 
 
-def get_first_available_driver(area):
+def get_first_available_driver(area, zip_code):
     if are_there_available_drivers():
         drivers = db.session.query(Driver)
+        orders = db.session.query(Order)
+        current_time = datetime.now()
         for driver in drivers:
             if driver.available and driver.working_area == area:
                 return driver
+            else:
+                if driver.working_area == area:
+                    for order in orders:
+                        customer = find_customer(order.customer_id)
+                        address = find_address(customer.address_id)
+                        if address.area == area and ((current_time - order.order_time).seconds / 60) < 1 and address.zip_code == zip_code:
+                            return driver
+
         raise Exception("There are no available drivers for your area.")
     else:
         raise Exception("There are no available drivers.")
+
+
 
 
 db.create_all()
