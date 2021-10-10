@@ -66,8 +66,18 @@ def save_new_dessert(name, price):
 
 
 def find_single_pizza(name):
-    pizza = Pizza.query.filter_by(name=name).first_or_404(description='There is no pizza with name {}'.format(name))
+    pizza = Pizza.query.filter_by(name=name).first()
     return pizza
+
+
+def find_single_drink(name):
+    drink = Drink.query.filter_by(name=name).first()
+    return drink
+
+
+def find_single_dessert(name):
+    dessert = Dessert.query.filter_by(name=name).first()
+    return dessert
 
 
 def delete_pizza(name):

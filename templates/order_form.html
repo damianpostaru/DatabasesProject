@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head title="ORDER FORM">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .click-cart {
+            overflow: hidden;
+            background-color: #333;
+        }
+
+        a {
+            float: left;
+            display: block;
+            color: #ff5858;
+            text-align: center;
+            text-decoration: none;
+            font-size: 17px;
+        }
+
+        .cart-header {
+            margin-top: 10px;
+        }
+
+        .food {
+            margin-top: 50px;
+        }
+
+        .drinks {
+            margin-top: 50px;
+            margin-left: 50px;
+        }
+
+        .desserts {
+            margin-top: 50px;
+            margin-left: 50px;
+        }
+
+        .cart-row-food {
+            margin-left: 200px;
+            text-align: right;
+            color: #ffa318;
+        }
+
+        .cart-row-drinks {
+            margin-left: 200px;
+            text-align: right;
+            color: #ffa318;
+        }
+
+        .cart-row-desserts {
+            margin-left: 200px;
+            text-align: right;
+            color: #ffa318;
+        }
+
+        .shop-price {
+            margin-left: 210px;
+            text-align: left;
+        }
+
+        .quantity-input {
+            text-align: right;
+            margin-left: 10px;
+        }
+
+        .shop-title {
+            margin-left: 20px;
+            display: inline-flex;
+            text-align: right;
+            font-size: 18px;
+        }
+
+        .clear-cart {
+            margin-top: 20px;
+            margin-left: 100px;
+            alignment: center;
+        }
+
+        .cart-total {
+            margin-top: 20px;
+            margin-left: 300px;
+            margin-right: 20px;
+            text-align: right;
+        }
+
+        .choose-delivery {
+            margin-top: 30px;
+        }
+
+        .order-input {
+            margin-top: 100px;
+            margin-left: 150px;
+            margin-right: 150px;
+            alignment: right;
+        }
+
+        .order-input button {
+            alignment: right;
+            background-color: #555;
+            color: white;
+            margin-top: 30px;
+            margin-left: 300px;
+            padding: 10px 30px;
+            font-size: 17px;
+            border: none;
+            cursor: pointer;
+        }
+
+
+    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<form id="form1">
+    <div class="click-cart">
+        <div class="cart-header">
+            <a><h1 style="margin: 100px">Cart</h1></a>
+        </div>
+        <div class="food">
+            <a><h2>Pizzas</h2></a>
+            <div class="cart-row-food">
+                {% for pizza in pizzas %}
+                    <span class="shop-title" id="{{ pizza.id }}">{{ pizza.name }}</span>
+                    <span class="shop-price">€{{ pizza.price }}</span>
+                    <input class="quantity-input" type="number" value="0"/>
+                    <button class="delete-cart">X</button>
+                    <br>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="drinks">
+            <a><h2>Drinks</h2></a>
+            <div class="cart-row-drinks">
+                {% for drink in drinks %}
+                    <span class="shop-title" id="{{ drink.id }}">{{ drink.name }}</span>
+                    <span class="shop-price">€{{ drink.price }}</span>
+                    <input class="quantity-input" type="number" value="0"/>
+                    <button class="delete-cart">X</button>
+                    <br>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="desserts">
+            <a><h2>Desserts</h2></a>
+            <div class="cart-row-desserts">
+                {% for dessert in desserts %}
+                    <span class="shop-title" id="{{ dessert.id }}">{{ dessert.name }}</span>
+                    <span class="shop-price">€{{ dessert.price }}</span>
+                    <input class="quantity-input" type="number" value="0"/>
+                    <button class="delete-cart">X</button>
+                    <br>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="order-input">
+            <div class="clear-checkout">
+                <button class="clear-cart">Clear Cart</button>
+            </div>
+            <div class="cart-total">
+                <strong class="cart-total-title">Total</strong>
+                <span class="cart-total-price">€0</span>
+            </div>
+            <div class="choose-delivery">
+                <a><h2 style=" margin-left: 50px;margin-right: 50px">To order</h2></a>
+                <label for="select">Choose delivery: </label>
+                <select id="select" onchange="changeDelivery()">
+                    <option>--Select--</option>
+                    <option>Take away</option>
+                    <option>Delivery</option>
+                </select>
+                <fieldset>
+                    <table class="delivery" id="Delivery"
+                           style="display: none;margin-left: 100px; margin-right: 100px;background-color: #ffa318">
+                        <tr>
+                            <td><label for="fn"><input id="fn" type="text" name="fn">first name:</label></td>
+                        </tr>
+                        <tr>
+                            <td><label for="ln"><input id="ln" type="text" name="ln">last name:</label></td>
+                        </tr>
+                        <tr>
+                            <td><label for="as"><input id="as" type="text" name="as">address street:</label></td>
+                        </tr>
+                        <tr>
+                            <td><label for="hn"><input id="hn" type="number" name="hn">house number:</label></td>
+                        </tr>
+                        <tr>
+                            <td><label for="zc"><input id="zc" type="text" name="zc">zipcode :</label></td>
+                        </tr>
+                        <tr>
+                            <td><label for="ar"><input id="ar" type="text" name="ar">area :</label></td>
+                        </tr>
+                        <tr>
+                            <td><label for="mn"><input type="number" id="mobile_number" onfocusout="checkMobile()">mobile
+                                number:
+                            </label></td>
+                        </tr>
+                    </table>
+                    <table id="Take away"
+                           style="display: none;margin-left: 100px; margin-right: 100px;background-color: #ffa318">
+                        <tr>
+                            <td><label for="tm">
+                                <select name="tm">
+                                    {% for i in range(0,23) %}
+                                        <option> {{ i }} </option>
+                                    {% endfor %}
+                                </select>Pick-up time:
+                            </label></td>
+                        </tr>
+                    </table>
+                </fieldset>
+                <button class="proceed" onclick="createPostOrder()">Create Order</button>
+            </div>
+        </div>
+    </div>
+
+</form>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<script>
+
+    function init() {
+        let removeCartItemButtons = document.querySelectorAll('.delete-cart');
+        for (let i = 0; i < removeCartItemButtons.length; i++) {
+            let button = removeCartItemButtons[i]
+            button.addEventListener('click', removeCartItem)
+        }
+        let quantityInputs = document.querySelectorAll('.quantity-input');
+        for (let i = 0; i < quantityInputs.length; i++) {
+            let input = quantityInputs[i]
+            input.addEventListener('change', quantityChanged);
+        }
+        changeDelivery();
+    }
+
+
+    function changeDelivery() {
+        let select = document.getElementById("select");
+        let sel_delivery = select.options[select.selectedIndex].label;
+        let del = document.getElementById("Delivery"),
+            take = document.getElementById("Take away");
+        del.style.display = "none";
+        take.style.display = "none";
+
+        if (sel_delivery === "Delivery") {
+            del.style.display = "block";
+        } else if (sel_delivery === "Take away") {
+            take.style.display = "block"
+        }
+    }
+
+
+    function checkMobile() {
+        let str = document.getElementById("mobile_number").value;
+        let ptr = /^06[072568][0-9]{7}$/;
+        let check = ptr.test(str);
+        if (!check)
+            alert("Mobile Number is incorrect");
+    }
+
+
+    function removeCartItem(event) {
+        let buttonClicked = event.target;
+        buttonClicked.parentElement.parentElement.remove()
+        updateCartTotal()
+    }
+
+
+    function quantityChanged() {
+        let input = event.target;
+        if (isNaN(input.value) || input.value <= 0) {
+            input.value = 0;
+        }
+        updateCartTotal()
+    }
+
+
+    function updateCartTotal() {
+        let cartItemContainer = document.querySelector('.click-cart');
+        let cartRows = cartItemContainer.querySelectorAll('.cart-row');
+
+        let total = 0
+        for (let i = 0; i < cartRows.length; i++) {
+            let cartRow = cartRows[i]
+            let priceElement = cartRow.querySelector('.shop-price');
+            let quantityElement = cartRow.querySelector('.quantity-input');
+
+            let price = parseFloat(priceElement.innerText.replace('€', ''))
+            let quantity = quantityElement.value
+            total = total + (price * quantity)
+        }
+        total = Math.round(total * 100) / 100
+        document.querySelector('.cart-total-price').innerText = '€' + total;
+    }
+
+
+    function createOrderItems() {
+        let order_items = [];
+        let cartItemContainer = document.querySelector('.click-cart');
+        let cartRows = cartItemContainer.querySelectorAll('.cart-row');
+        for (let i = 0; i < cartRows.length; i++) {
+            let cartRow = cartRows[i];
+            let quantityElement = cartRow.querySelector('.quantity-input');
+            let itemName = cartRow.querySelector('.shop-title').innerText;
+            if (quantityElement.value !== '0') {
+                fetch('/menuItem/' + itemName).then(response => {
+                    return response.json();
+                }).then(body => {
+                    order_items.push({
+                        menu_item: body['id'],
+                        quantity: quantityElement.value
+                    });
+                    return body;
+                })
+            }
+        }
+        return order_items;
+    }
+
+    function createPostOrder() {
+        const body = JSON.stringify({
+            customer: {
+                first_name: document.getElementById("fn").value,
+                last_name: document.getElementById("ln").value,
+                phone_number: document.getElementById("mobile_number").value,
+                address: {
+                    street: document.getElementById("as").value,
+                    house_number: document.getElementById("hn").value,
+                    zip_code: document.getElementById("zc").value,
+                    area: document.getElementById("ar").value,
+                }
+            },
+            order_items: createOrderItems()
+        });
+
+
+        console.log(body);
+
+        $.ajax({
+            type: "POST",
+            url: "/order",
+            contentType: "application/json",
+            data: body,
+            dataType: "json",
+            success: function (response) {
+                console.log(response);
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+    }
+
+    init();
+
+</script>
+</html>
