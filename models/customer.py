@@ -8,3 +8,4 @@ class Customer(db.Model):
     phone_number = db.Column(db.String(80), nullable=False)
     address_id = db.Column(db.Integer, db.ForeignKey('address.id'))
     orders = db.relationship("Order", backref='customer')
+    bonus_count = db.Column(db.Integer, nullable=False, default=0)

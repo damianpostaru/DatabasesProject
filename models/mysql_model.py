@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 
 from apscheduler.triggers.date import DateTrigger
+from flask import render_template
 from flask_apscheduler import APScheduler
 
 from app import db, app
@@ -116,6 +117,7 @@ def save_new_order(customer, order_items):
     driver_id = driver.id
     driver.available = False
     address = customer["address"]
+    discount = False
     address_found = Address.query.filter_by(street=address["street"],
                                             house_number=address["house_number"],
                                             zip_code=address["zip_code"],
@@ -144,6 +146,16 @@ def save_new_order(customer, order_items):
                                 address_id=address_id)
     db.session.add(new_customer)
     db.session.commit()
+    count = new_customer.bonus_count
+    for item in order_items:
+        menu_item_id = item['menu_item']
+        quantity = item['quantity']
+        if find_menu_item(menu_item_id).pizza_id is not None:
+            count += quantity
+    if count > 10:
+        discount = True
+        count = count - 10
+    new_customer.bonus_count = count
     customer_id = new_customer.id
     for item in order_items:
         new_order_items.append(OrderItem(menu_item=item['menu_item'], quantity=item['quantity']))
@@ -157,7 +169,7 @@ def save_new_order(customer, order_items):
     order_id = new_order.id
     add_jobs_scheduler(order_id)
 
-    return new_order
+    return render_template('show_order.html', discount=discount, customer=customer_found, order=new_order)
 
 
 def add_jobs_scheduler(order_id):
@@ -203,6 +215,12 @@ def find_order(order_id):
     return order
 
 
+def find_menu_item(menu_item_id):
+    menu_item = MenuItem.query.filter_by(id=menu_item_id).first_or_404(
+        description='There is no menu item with id {}'.format(menu_item_id))
+    return menu_item
+
+
 def find_address(address_id):
     address = Address.query.filter_by(id=address_id).first_or_404(
         description='There is no address with id {}'.format(address_id))
@@ -214,9 +232,10 @@ def find_driver(driver_id):
         .first_or_404(description='There is no driver with id {}'.format(driver_id))
     return driver
 
+
 def find_customer(customer_id):
     customer = Customer.query.filter_by(id=customer_id) \
-        .first_or_404(description='There is no driver with id {}'.format(customer_id))
+        .first_or_404(description='There is no customer with id {}'.format(customer_id))
     return customer
 
 
@@ -264,14 +283,13 @@ def get_first_available_driver(area, zip_code):
                     for order in orders:
                         customer = find_customer(order.customer_id)
                         address = find_address(customer.address_id)
-                        if address.area == area and ((current_time - order.order_time).seconds / 60) < 1 and address.zip_code == zip_code:
+                        if address.area == area and (
+                                (current_time - order.order_time).seconds / 60) < 1 and address.zip_code == zip_code:
                             return driver
 
         raise Exception("There are no available drivers for your area.")
     else:
         raise Exception("There are no available drivers.")
-
-
 
 
 db.create_all()
