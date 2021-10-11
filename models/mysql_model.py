@@ -36,6 +36,7 @@ def save_new_pizza(name, ingredients):
                 Ingredient(name=ingredient["name"], vegetarian=ingredient["vegetarian"], price=ingredient["price"]))
     calculated_price = calculated_price + 0.4 * calculated_price  # 40% profit
     calculated_price = calculated_price + 0.09 * calculated_price  # 9% VAT
+    calculated_price = str(round(calculated_price, 2))
     new_pizza = Pizza(name=name, vegetarian=veg_flag, price=calculated_price, ingredients=ingredients_list)
     db.session.add(new_pizza)
     db.session.commit()
@@ -108,7 +109,10 @@ def show_ingredients(name):
 
 def save_new_order(customer, order_items):
     new_order_items = []
-    driver = get_first_available_driver()
+    customer_address = customer["address"]
+    customer_area = customer_address["area"]
+    customer_zip_code = customer_address["zip_code"]
+    driver = get_first_available_driver(customer_area, customer_zip_code)
     driver_id = driver.id
     driver.available = False
     address = customer["address"]
@@ -178,6 +182,7 @@ def add_jobs_scheduler(order_id):
         print("Driver Back")
         db.session.commit()
 
+    # TODO: Change the times
     scheduler.add_job(id='preparation-time-'f'{order_id}', func=change_status,
                       trigger=DateTrigger(order_time + timedelta(minutes=0.1)))
     scheduler.add_job(id='delivery-time-'f'{order_id}', func=deliver,
@@ -198,10 +203,21 @@ def find_order(order_id):
     return order
 
 
+def find_address(address_id):
+    address = Address.query.filter_by(id=address_id).first_or_404(
+        description='There is no address with id {}'.format(address_id))
+    return address
+
+
 def find_driver(driver_id):
     driver = Driver.query.filter_by(id=driver_id) \
         .first_or_404(description='There is no driver with id {}'.format(driver_id))
     return driver
+
+def find_customer(customer_id):
+    customer = Customer.query.filter_by(id=customer_id) \
+        .first_or_404(description='There is no driver with id {}'.format(customer_id))
+    return customer
 
 
 def cancel_order(order_id):
@@ -235,14 +251,27 @@ def are_there_available_drivers():
     return False
 
 
-def get_first_available_driver():
+def get_first_available_driver(area, zip_code):
     if are_there_available_drivers():
         drivers = db.session.query(Driver)
+        orders = db.session.query(Order)
+        current_time = datetime.now()
         for driver in drivers:
-            if driver.available:
+            if driver.available and driver.working_area == area:
                 return driver
+            else:
+                if driver.working_area == area:
+                    for order in orders:
+                        customer = find_customer(order.customer_id)
+                        address = find_address(customer.address_id)
+                        if address.area == area and ((current_time - order.order_time).seconds / 60) < 1 and address.zip_code == zip_code:
+                            return driver
+
+        raise Exception("There are no available drivers for your area.")
     else:
         raise Exception("There are no available drivers.")
+
+
 
 
 db.create_all()

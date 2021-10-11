@@ -53,4 +53,4 @@ def setup():
         dwight_schrute = save_new_driver("Dwight", "Schrute", "Sphinx quarter")
         jim_halpert = save_new_driver("Jim", "Halpert", "Céramique")
         victor_htema = save_new_driver("Victor", "Htema", "Jeker quarter")
-        francisca_van_dijk = save_new_driver("Britt", "Van Dijk", "Sint Pieter")
+        francisca_van_dijk = save_new_driver("Francisca", "Van Dijk", "Sint Pieter")
