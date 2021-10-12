@@ -122,45 +122,45 @@
         </div>
         <div class="food">
             <a><h2>Pizzas</h2></a>
-            <div class="cart-row">
-                <div class="cart-row-food">
-                    {% for pizza in pizzas %}
+            <div class="cart-row-food">
+                {% for pizza in pizzas %}
+                    <div class="cart-row">
                         <span class="shop-title" id="{{ pizza.id }}">{{ pizza.name }}</span>
                         <span class="shop-price">€{{ pizza.price }}</span>
                         <input class="quantity-input" type="number" value="0"/>
                         <button class="delete-cart">X</button>
                         <br>
-                    {% endfor %}
-                </div>
+                    </div>
+                {% endfor %}
             </div>
 
         </div>
         <div class="drinks">
             <a><h2>Drinks</h2></a>
-            <div class="cart-row">
-                <div class="cart-row-drinks">
-                    {% for drink in drinks %}
+            <div class="cart-row-drinks">
+                {% for drink in drinks %}
+                    <div class="cart-row">
                         <span class="shop-title" id="{{ drink.id }}">{{ drink.name }}</span>
                         <span class="shop-price">€{{ drink.price }}</span>
                         <input class="quantity-input" type="number" value="0"/>
                         <button class="delete-cart">X</button>
                         <br>
-                    {% endfor %}
-                </div>
+                    </div>
+                {% endfor %}
             </div>
         </div>
         <div class="desserts">
             <a><h2>Desserts</h2></a>
-            <div class="cart-row">
-                <div class="cart-row-desserts">
-                    {% for dessert in desserts %}
+            <div class="cart-row-desserts">
+                {% for dessert in desserts %}
+                    <div class="cart-row">
                         <span class="shop-title" id="{{ dessert.id }}">{{ dessert.name }}</span>
                         <span class="shop-price">€{{ dessert.price }}</span>
                         <input class="quantity-input" type="number" value="0"/>
                         <button class="delete-cart">X</button>
                         <br>
-                    {% endfor %}
-                </div>
+                    </div>
+                {% endfor %}
             </div>
         </div>
         <div class="order-input">
